@@ -70,9 +70,11 @@ datamassfull = {**datatrainmassfull, **datatestmassfull}
 #datatestcalccropped = extractimglabel("data/csv/calc_case_description_test_set.csv","cropped")
 #datacalccropped = {**datatraincalccropped, **datatestcalccropped}
 
-
-#####de abschnitt brauchst du    
-def vgg_transform_feature(data):         #Transform dataset using resize, rescale, reshape for Xception model
+'''
+    input:  dictionary (key: imagefilepath, value: label)
+    output: array of images with height and width of 224 and list of labels
+'''
+def vgg_transform_feature(data):         
     images = []
     labels = list(data.values())
     for img in data.keys():
@@ -94,13 +96,9 @@ def vgg_transform_feature(data):         #Transform dataset using resize, rescal
     images.reshape(images.shape[0],images.shape[1],images.shape[2],3)
     return images,labels
 
-#img,lab = vgg_transform_feature(datacalcfull)
 imgfull,labfull = vgg_transform_feature(datamassfull)
-#imgcropped,labcropped = vgg_transform_feature(datacalccropped)
 
-
-
-# image preprocessing
+# remove white borders
 def prepare_images(images):
     preparedimages = []
     for image in images:
@@ -112,7 +110,8 @@ def prepare_images(images):
     preparedimages = np.array(preparedimages)
     preparedimages.reshape(preparedimages.shape[0],preparedimages.shape[1],preparedimages.shape[2],3)
     return preparedimages
-            
+
+#remove artefacts
 def remove_artefacts(images):
     preparedimages = []
     for image in images:
@@ -156,64 +155,19 @@ def clahe(images):
     preparedimages.reshape(preparedimages.shape[0],preparedimages.shape[1],preparedimages.shape[2],3)
     return preparedimages
 
+#preppipeline (remove_artefacts sometimes removes information that is possible necessary)
 def preppipeline(images):
-    #for image in images:
-    #    img = Image.fromarray(image)
-    #    img.show()
     preparedimages = prepare_images(images)
     #preparedimages = remove_artefacts(preparedimages)
     preparedimages = gammacorrect(preparedimages)
     preparedimages = clahe(preparedimages)
-    #for image in preparedimages:
-    #   img = Image.fromarray(image)
-    #   img.show() 
     return preparedimages
     
-
-'''
-def gfbfilter(images):
-    #ij = imagej.init()
-    preparedimages = []
-    for image in images:
-        img = Image.fromarray(image)
-        img.save("step.jpg")
-        jpg = IJ.openImage("step.jpg")
-        #cvimage = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-        #gbimage = cv2.applyColorMap(cvimage, cv2.COLORMAP_WINTER)
-        #pilimage = cv2.cvtColor(gbimage, cv2.COLOR_BGR2RGB)
-        
-        #preimage = Image.fromarray(pilimage)
-        #preimage.show()
-        #cm = Colormap('imagej:GreenFireBlue')
-        #img.show()
-        jpg.show()
-        IJ.run(jpg, "Green Fire Blue", "")
-        
-'''     
 img = preppipeline(imgfull)
 lab = labfull
-
-#preppipeline(img)
 X_train, X_test, Y_train, Y_test = train_test_split(img , lab, train_size=0.80, random_state=42) #42 data is shuffled befor splitting
-#X_train = np.concatenate((X_train,imgcropped))
-#Y_train = np.concatenate((Y_train,labcropped))
 
 
-#X_train = preppipeline(X_train[0:5])
-
-
-malignant = 0
-benign = 0
-for elem in lab:
-    if elem == 0:
-        malignant = malignant + 1
-    else:
-        benign = benign + 1
-
-print("benign")
-print(benign)
-print("malignant")
-print(malignant)
 def dataaugmentation_paper(img,lab):
     augmentedimages = []
     augmentedlabels = []
@@ -232,8 +186,6 @@ def dataaugmentation_paper(img,lab):
         rotateverticalminus = verticalflip.rotate(-35,fillcolor="black")
         rotatehorizontalplus = horizontalflip.rotate(35, fillcolor="black")
         rotatehorizontalminus = horizontalflip.rotate(-35, fillcolor="black")
-        #rotateverticalhorizontalplus = verticalhorizontalflip.rotate(35, fillcolor="black")
-        #rotateverticalhorizontalminus = verticalhorizontalflip.rotate(-35, fillcolor="black")
         
         augmentedimages.append(image)
         augmentedimages.append(verticalflip)
@@ -245,8 +197,6 @@ def dataaugmentation_paper(img,lab):
         augmentedimages.append(rotatehorizontalminus)
         augmentedimages.append(rotateverticalplus)
         augmentedimages.append(rotateverticalminus)
-        #augmentedimages.append(rotateverticalhorizontalplus)
-        #augmentedimages.append(rotateverticalhorizontalminus)
 
         i = 0
         while i <= 11:
@@ -257,49 +207,6 @@ def dataaugmentation_paper(img,lab):
     augmentedimages.reshape(augmentedimages.shape[0],augmentedimages.shape[1],augmentedimages.shape[2],3)
     return augmentedimages, augmentedlabels
 
-
-#X_train,Y_train = dataaugmentation_paper(X_train,Y_train)
-
-###hier hört der Abschnitt auf      
-def vggdataaugmentationsecondmodel(img,lab):
-    augmentedimages = []
-    augmentedlabels = []
-    n = 0
-    while n < len(img):
-        image = Image.fromarray(img[n])
-
-        #flip on vertival line
-        aug_img = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-        augmentedimages.append(image)
-        augmentedlabels.append(lab[n])
-        augmentedimages.append(aug_img)
-        augmentedlabels.append(lab[n])
-
-        #rotate to left and right
-        rotateplusaug = aug_img.rotate(5, fillcolor="black")
-        rotateminusaug = aug_img.rotate(-5, fillcolor="black")
-        rotateplus = image.rotate(5, fillcolor="black")
-        rotateminus = image.rotate(-5, fillcolor="black")
-        augmentedimages.append(rotateplus)
-        augmentedlabels.append(lab[n])
-        augmentedimages.append(rotateminus)
-        augmentedlabels.append(lab[n])
-        augmentedimages.append(rotateplusaug)
-        augmentedlabels.append(lab[n])
-        augmentedimages.append(rotateplusaug)
-        augmentedlabels.append(lab[n])
-        #zoom in
-        #zoomedimage = ImageOps.crop(image, border=20)
-        #zoomedimage = ImageOps.contain(zoomedimage,(224,244))
-        #zoomedimage.show()
-        #augmentedimages.append(zoomedimage)
-        #augmentedlabels.append(lab[n])
-    
-        n = n + 1
-    augmentedimages = np.array(augmentedimages)
-    augmentedimages.reshape(augmentedimages.shape[0],augmentedimages.shape[1],augmentedimages.shape[2],3)
-    return augmentedimages,augmentedlabels
-
 datagen = ImageDataGenerator(
     featurewise_center=True,
     featurewise_std_normalization=True,
@@ -309,14 +216,9 @@ datagen = ImageDataGenerator(
     horizontal_flip=True,
     vertical_flip=True)
 
-print("training rate 0,0001, mass case, Flatten, Dense(2), no augmentation, no image data generator, preprocessing")
+#print parameters in outputfile
+print("training rate 0,0001, mass case, Flatten, Dense(1), no augmentation, no image data generator, preprocessing")
 
-
-#split in train and test set 
-#X_train, X_test, Y_train, Y_test = train_test_split(img , lab, train_size=0.80, random_state=42) #42 data is shuffled befor splitting
-#X_train, Y_train = dataaugmentation_paper(X_train,Y_train)
-
-# specify input shape, user imagenet weights and dont include top layers
 
 vgg16 = VGG16(input_shape=(224,224,3),weights="imagenet",include_top=False)
 
@@ -324,16 +226,9 @@ vgg16 = VGG16(input_shape=(224,224,3),weights="imagenet",include_top=False)
 for layer in vgg16.layers:      
   layer.trainable = False
 
-#for layer in vgg16.layers[17:]:
-#    layer.trainable = True
+
     
 x = tf.keras.layers.Flatten()(vgg16.output)
-#x=tf.keras.layers.GlobalAveragePooling2D()(vgg16.output)
-#x = layers.Dense(125,activation='softmax')(x)
-#x = layers.Dropout(0.5)(x)
-#x = layers.Dense(50,activation='softmax')(x)
-#x = layers.Dropout(0.2)(x)
-#x = layers.Dense(10,activation='softmax')(x)
 output = layers.Dense(1, activation='softmax')(x)
 
 model = Model(inputs=vgg16.input, outputs=output)
@@ -351,7 +246,6 @@ print(len(Y_train))
 result = model.fit(
     np.array(X_train),
     np.array(Y_train),
-    #batch_size = 1,
     epochs=50,
     validation_data=(X_test, np.array(Y_test)),
     verbose=2

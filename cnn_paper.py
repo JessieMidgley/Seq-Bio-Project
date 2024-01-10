@@ -224,8 +224,6 @@ def dataaugmentation_paper(img,lab):
     return augmentedimages, augmentedlabels
 
 datagen = ImageDataGenerator(
-    featurewise_center=True,
-    featurewise_std_normalization=True,
     rotation_range=20,
     width_shift_range=0.2,
     height_shift_range=0.2,
@@ -233,7 +231,7 @@ datagen = ImageDataGenerator(
     vertical_flip=True)
 
 #print parameters in outputfile
-print("training rate 0,0001, mass case, Flatten, no augmentation, no image data generator, vgg16_preprocessing, 108")
+print("training rate 0,0001, mass case, Flatten, no augmentation, no image data generator, vgg16_preprocessing,108, binary")
 
 
 vgg16 = VGG16(input_shape=(224,224,3),weights="imagenet",include_top=False)
@@ -246,15 +244,15 @@ x = tf.keras.layers.Flatten()(vgg16.output)
 #x = layers.Dense(75,activation='softmax')(x)
 #x = layers.Dropout(0,4)(x)
 #x = layers.Dense(50,activation='softmax')(x)
-output = layers.Dense(2, activation='softmax')(x)
-
+#x = layers.Dense(2, activation='softmax')(x)
+output = layers.Dense(1, activation='sigmoid')(x)
 model = Model(inputs=vgg16.input, outputs=output)
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
 
 model.compile(
-  loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+  loss=tf.keras.losses.BinaryCrossentropy(),
   optimizer=optimizer,
-  metrics=['accuracy']
+  metrics=[tf.keras.metrics.AUC(),tf.keras.metrics.TruePositives(),tf.keras.metrics.TrueNegatives(),tf.keras.metrics.FalsePositives(),tf.keras.metrics.FalseNegatives(),tf.keras.metrics.BinaryAccuracy(),tf.keras.metrics.Precision(),tf.keras.metrics.Recall()]
 )
 
 model.summary()

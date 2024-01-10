@@ -178,7 +178,7 @@ def preppipeline(images):
     return preparedimages
     
 #img = preppipeline(imgfull)
-#img = tf.keras.applications.vgg16.preprocess_input(imgfull)
+img = tf.keras.applications.vgg16.preprocess_input(imgfull)
 img = imgfull
 lab = labfull
 X_train, X_test, Y_train, Y_test = train_test_split(img , lab, train_size=0.80, random_state=108) #42 data is shuffled befor splitting
@@ -233,7 +233,7 @@ datagen = ImageDataGenerator(
     vertical_flip=True)
 
 #print parameters in outputfile
-print("training rate 0,0001, mass case, Flatten, no augmentation, no image data generator, no vgg16_preprocessing, 108")
+print("training rate 0,0001, mass case, Flatten, no augmentation, no image data generator, vgg16_preprocessing, 108")
 
 
 vgg16 = VGG16(input_shape=(224,224,3),weights="imagenet",include_top=False)

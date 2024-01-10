@@ -98,6 +98,20 @@ def vgg_transform_feature(data):
 
 imgfull,labfull = vgg_transform_feature(datamassfull)
 
+def transform_feature(data):              
+    images, labels = [],[]
+    size = 224
+    for img,label in data.items():
+        with Image.open(img) as img:
+            #img = Image.fromarray(img)
+            img = np.array(img)
+            images.append((cv2.resize(img,(size,size)))/255)
+            labels.append(label)
+    img_array = np.array(images)
+    X = img_array.reshape(img_array.shape[0],img_array.shape[1],img_array.shape[2],1)
+    return X, labels
+
+#imgfull,labfull = transform_feature(datamassfull)
 # remove white borders
 def prepare_images(images):
     preparedimages = []
@@ -163,9 +177,11 @@ def preppipeline(images):
     preparedimages = clahe(preparedimages)
     return preparedimages
     
-img = preppipeline(imgfull)
+#img = preppipeline(imgfull)
+#img = tf.keras.applications.vgg16.preprocess_input(imgfull)
+img = imgfull
 lab = labfull
-X_train, X_test, Y_train, Y_test = train_test_split(img , lab, train_size=0.80, random_state=42) #42 data is shuffled befor splitting
+X_train, X_test, Y_train, Y_test = train_test_split(img , lab, train_size=0.80, random_state=108) #42 data is shuffled befor splitting
 
 
 def dataaugmentation_paper(img,lab):
@@ -217,7 +233,7 @@ datagen = ImageDataGenerator(
     vertical_flip=True)
 
 #print parameters in outputfile
-print("training rate 0,0001, mass case, Flatten, Dense(1), no augmentation, no image data generator, preprocessing")
+print("training rate 0,0001, mass case, Flatten, no augmentation, no image data generator, no vgg16_preprocessing, 108")
 
 
 vgg16 = VGG16(input_shape=(224,224,3),weights="imagenet",include_top=False)
@@ -226,18 +242,19 @@ vgg16 = VGG16(input_shape=(224,224,3),weights="imagenet",include_top=False)
 for layer in vgg16.layers:      
   layer.trainable = False
 
-
-    
 x = tf.keras.layers.Flatten()(vgg16.output)
-output = layers.Dense(1, activation='softmax')(x)
+#x = layers.Dense(75,activation='softmax')(x)
+#x = layers.Dropout(0,4)(x)
+#x = layers.Dense(50,activation='softmax')(x)
+output = layers.Dense(2, activation='softmax')(x)
 
 model = Model(inputs=vgg16.input, outputs=output)
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
 
 model.compile(
-  loss=tf.keras.losses.BinaryCrossentropy(),
+  loss=tf.keras.losses.SparseCategoricalCrossentropy(),
   optimizer=optimizer,
-  metrics=['accuracy',tf.keras.metrics.AUC()]
+  metrics=['accuracy']
 )
 
 model.summary()
@@ -246,7 +263,8 @@ print(len(Y_train))
 result = model.fit(
     np.array(X_train),
     np.array(Y_train),
-    epochs=50,
+    batch_size=1,
+    epochs=15,
     validation_data=(X_test, np.array(Y_test)),
     verbose=2
 )

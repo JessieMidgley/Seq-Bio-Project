@@ -139,7 +139,7 @@ def preprocess_image(path, mode, model, maintain_aspect_ratio=False, dicom=False
                 dicom (bool): Whether the images are in DICOM format (default: False).
 
             Returns:
-                A numpy array representing the processed image (grayscale, values in range [0, 255]).
+                A numpy array representing the processed image.
     """
 
     if dicom:
@@ -163,7 +163,8 @@ def preprocess_image(path, mode, model, maintain_aspect_ratio=False, dicom=False
         # img_data = (img_data/127.5) - 1
         return img_data
     else:
-        # mode == 'tf'
+        # The tensorflow preprocessing functions expect a 3D or 4D np.array with 3 color channels!
+        img_data = cv2.cvtColor(img_data, cv2.COLOR_GRAY2RGB)
         if model == 'ResNet50':
             return tf.keras.applications.resnet50.preprocess_input(img_data)
         else:

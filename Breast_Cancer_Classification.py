@@ -208,6 +208,7 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
     # Train the model
     print('----------Training the model----------')
     history = model.fit(X_train,
+                        y_train,
                         epochs=50,
                         validation_data=(X_val, y_val),
                         callbacks=[callback],

@@ -1,3 +1,6 @@
+from PIL import Image
+import numpy as np
+
 """ augment images
 
         Parameters:
@@ -19,12 +22,12 @@ def dataaugmentation(imgs,labs):
         horizontalflip = image.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
         verticalhorizontalflip = verticalflip.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
 
-        rotateplus = image.rotate(35, fillcolor="black")
-        rotateminus = image.rotate(-35, fillcolor="black")
-        rotateverticalplus = verticalflip.rotate(35,fillcolor="black")
-        rotateverticalminus = verticalflip.rotate(-35,fillcolor="black")
-        rotatehorizontalplus = horizontalflip.rotate(35, fillcolor="black")
-        rotatehorizontalminus = horizontalflip.rotate(-35, fillcolor="black")
+        rotateplus = image.rotate(45, fillcolor="black")
+        rotateminus = image.rotate(-45, fillcolor="black")
+        rotateverticalplus = verticalflip.rotate(45,fillcolor="black")
+        rotateverticalminus = verticalflip.rotate(-45,fillcolor="black")
+        rotatehorizontalplus = horizontalflip.rotate(45, fillcolor="black")
+        rotatehorizontalminus = horizontalflip.rotate(-45, fillcolor="black")
         
         augmentedimages.append(image)
         augmentedimages.append(verticalflip)
@@ -38,7 +41,7 @@ def dataaugmentation(imgs,labs):
         augmentedimages.append(rotateverticalminus)
 
         i = 0
-        while i <= 1:
+        while i <= 9:
             augmentedlabels.append(labs[n])
             i = i + 1
         n = n + 1
@@ -46,3 +49,4 @@ def dataaugmentation(imgs,labs):
     augmentedimages = np.array(augmentedimages)
     augmentedimages.reshape(augmentedimages.shape[0],augmentedimages.shape[1],augmentedimages.shape[2],3)
     return augmentedimages, augmentedlabels
+

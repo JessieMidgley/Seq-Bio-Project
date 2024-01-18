@@ -25,15 +25,15 @@ from keras.utils import plot_model
 from keras.callbacks import EarlyStopping
 
 
-def load_image_paths(image_dir='data/csv/dicom_info.csv'):
+def load_image_paths(image_dir='./venv/CBIS-DDSM/csv/dicom_info.csv'):
     """Load the image file paths from dicom_info.csv"""
     data = pd.read_csv(image_dir)
     cropped_images = data[data.SeriesDescription == 'cropped images'].image_path
-    cropped_images = cropped_images.apply(lambda x: './data/' + x)
+    cropped_images = cropped_images.apply(lambda x: './venv/' + x)
     full_mammogram_images = data[data.SeriesDescription == 'full mammogram images'].image_path
-    full_mammogram_images = full_mammogram_images.apply(lambda x: './data/' + x)
+    full_mammogram_images = full_mammogram_images.apply(lambda x: './venv/' + x)
     roi_mask_images = data[data.SeriesDescription == 'ROI mask images'].image_path
-    roi_mask_images = roi_mask_images.apply(lambda x: './data/' + x)
+    roi_mask_images = roi_mask_images.apply(lambda x: './venv/' + x)
     return full_mammogram_images, cropped_images, roi_mask_images
 
 
@@ -78,15 +78,15 @@ def fix_image_path(data_frame, only_full_images=True):
 def train_test_validation_split(only_mass_cases=True, only_full_images=True):
     """Split data into train, test, and validation sets (70, 20, 10)"""
 
-    mass_cases_train = pd.read_csv('data/csv/mass_case_description_train_set.csv')
-    mass_cases_test = pd.read_csv('data/csv/mass_case_description_test_set.csv')
+    mass_cases_train = pd.read_csv('./venv/CBIS-DDSM/csv/mass_case_description_train_set.csv')
+    mass_cases_test = pd.read_csv('./venv/CBIS-DDSM/csv/mass_case_description_test_set.csv')
     fix_image_path(mass_cases_train, only_full_images=only_full_images)
     fix_image_path(mass_cases_test, only_full_images=only_full_images)
     full_cases = pd.concat([mass_cases_train, mass_cases_test], axis=0)
 
     if not only_mass_cases:
-        calc_cases_train = pd.read_csv('data/csv/calc_case_description_train_set.csv')
-        calc_cases_test = pd.read_csv('data/csv/calc_case_description_train_set.csv')
+        calc_cases_train = pd.read_csv('./venv/CBIS-DDSM/csv/calc_case_description_train_set.csv')
+        calc_cases_test = pd.read_csv('./venv/CBIS-DDSM/csv/calc_case_description_train_set.csv')
         fix_image_path(calc_cases_train, only_full_images=only_full_images)
         # Problem with calc_cases_test: 282 out of 326 image paths are invalid!
         fix_image_path(calc_cases_test, only_full_images=only_full_images)

@@ -24,6 +24,7 @@ from tensorflow.keras.regularizers import l2
 import pandas as pd
 import image_preprocessing
 from tueplots import bundles
+import validation_cnn
 
 def load_image_paths(image_dir='./venv/CBIS-DDSM/csv/dicom_info.csv'):
     """Loads the image file paths from dicom_info.csv.
@@ -158,10 +159,10 @@ def vgg16():
     
     for layer in vgg16.layers:      
         layer.trainable = False
-    for layer in vgg16.layers[-2:]:
-        layer.trainable = True
-    x = layers.Dropout(0.4)(vgg16.output)
-    x = tf.keras.layers.Flatten()(x)
+    #for layer in vgg16.layers[-2:]:
+    #    layer.trainable = True
+    #x = layers.Dropout(0.4)(vgg16.output)
+    x = tf.keras.layers.Flatten()(vgg16.output)
     output = layers.Dense(1, activation='sigmoid')(x)
     
     model = Model(inputs=vgg16.input, outputs=output)
@@ -256,7 +257,15 @@ def main():
     model = vgg16()
     trained_model = train_model(model, model_type='VGG16', only_mass_cases=False, only_full_images=True, mode='tf',
                                 maintain_aspect_ratio=False, dicom=False)
-
+    #X_train, Y_train, X_val, Y_val, X_test, Y_test = train_test_validation_split(model="VGG16",
+    #                                                                             only_mass_cases=False,
+    #                                                                             only_full_images=True,
+    #                                                                             mode="tf",
+    #                                                                             maintain_aspect_ratio=False,
+    #                                                                             dicom=False)
+    #images = np.concatenate((X_train,X_val,X_test))
+    #labels = np.concatenate((Y_train,Y_val,Y_test))
+    #validation_cnn.validation(images, labels,3)
 
 if __name__ == "__main__":
     main()

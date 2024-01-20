@@ -1,5 +1,4 @@
-
-%Version 2.1 April 2023
+Version 2.1 April 2023
 % See section 11 of the User Manual for version history
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -163,6 +162,13 @@ Mammography is a widely used technique for screening breast cancer. In the prese
 \subsection{Last Layer Trainable}\label{sec2}
 \subsection{Fully Connected Layer vs. Global Average Pooling layer.}\label{sec2}
 \subsection{Learning Rate}\label{sec2}
+The learning rate is a hyperparameter of the optimizer, adopted to achieve better performance of machine learning models.
+Yuanyuan et al. even claim that the learning rate is the hyperparameter with the largest influence on the classification accuracy of a model \cite{Yuanyuan_2020}.
+The learning rate defines the weight with which we are updating the parameter at each iteration and it gives an inside on how fast the model adapts \cite{Brownlee_2020}.  
+Finding an optimal value for this parameter is challenging. In the result section, results for different values of the learning rate are presented. 
+Performance comparisons underline the importance of the parameter as the performance varies between different learning rates. 
+If it is too large, the model's performance might not be optimal because it might miss the optimal value \cite{Brownlee_2020}.
+If the learning rate is too small the training process might be time-consuming.
 \subsection{Image Data Generator}\label{sec2}
 \subsection{Data Augmentation}\label{sec2}
 \subsection{Keeping Height/Width Ratio}\label{sec2}
@@ -214,9 +220,6 @@ convallis neque. Sed dolor orci, scelerisque ac, dapibus nec, ultricies ut, mi. 
 \end{quote}
 
 
-\bibliography{sn-bibliography}% common bib file
-%% if required, the content of .bbl file can be included here once bbl is generated
-%%\input sn-article.bbl
-
+\bibliography{sn-bibliography}
 
 \end{document}

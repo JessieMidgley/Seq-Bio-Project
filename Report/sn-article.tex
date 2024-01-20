@@ -1,1 +1,222 @@
 
+%Version 2.1 April 2023
+% See section 11 of the User Manual for version history
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                 %%
+%% Please do not use \input{...} to include other tex files.       %%
+%% Submit your LaTeX manuscript as one .tex document.              %%
+%%                                                                 %%
+%% All additional figures and files should be attached             %%
+%% separately and not embedded in the \TeX\ document itself.       %%
+%%                                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%\documentclass[referee,sn-basic]{sn-jnl}% referee option is meant for double line spacing
+
+%%=======================================================%%
+%% to print line numbers in the margin use lineno option %%
+%%=======================================================%%
+
+%%\documentclass[lineno,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+
+%%======================================================%%
+%% to compile with pdflatex/xelatex use pdflatex option %%
+%%======================================================%%
+
+%%\documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+
+
+%%Note: the following reference styles support Namedate and Numbered referencing. By default the style follows the most common style. To switch between the options you can add or remove Numbered in the optional parenthesis. 
+%%The option is available for: sn-basic.bst, sn-vancouver.bst, sn-chicago.bst, sn-mathphys.bst. %  
+ 
+%%\documentclass[sn-nature]{sn-jnl}% Style for submissions to Nature Portfolio journals
+%%\documentclass[sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+\documentclass[sn-mathphys,Numbered]{sn-jnl}% Math and Physical Sciences Reference Style
+%%\documentclass[sn-aps]{sn-jnl}% American Physical Society (APS) Reference Style
+%%\documentclass[sn-vancouver,Numbered]{sn-jnl}% Vancouver Reference Style
+%%\documentclass[sn-apa]{sn-jnl}% APA Reference Style 
+%%\documentclass[sn-chicago]{sn-jnl}% Chicago-based Humanities Reference Style
+%%\documentclass[default]{sn-jnl}% Default
+%%\documentclass[default,iicol]{sn-jnl}% Default with double column layout
+
+%%%% Standard Packages
+%%<additional latex packages if required can be included here>
+
+\usepackage{graphicx}%
+\usepackage{multirow}%
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{amsthm}%
+\usepackage{mathrsfs}%
+\usepackage[title]{appendix}%
+\usepackage{xcolor}%
+\usepackage{textcomp}%
+\usepackage{manyfoot}%
+\usepackage{booktabs}%
+\usepackage{algorithm}%
+\usepackage{algorithmicx}%
+\usepackage{algpseudocode}%
+\usepackage{listings}%
+%%%%
+
+%%%%%=============================================================================%%%%
+%%%%  Remarks: This template is provided to aid authors with the preparation
+%%%%  of original research articles intended for submission to journals published 
+%%%%  by Springer Nature. The guidance has been prepared in partnership with 
+%%%%  production teams to conform to Springer Nature technical requirements. 
+%%%%  Editorial and presentation requirements differ among journal portfolios and 
+%%%%  research disciplines. You may find sections in this template are irrelevant 
+%%%%  to your work and are empowered to omit any such section if allowed by the 
+%%%%  journal you intend to submit to. The submission guidelines and policies 
+%%%%  of the journal take precedence. A detailed User Manual is available in the 
+%%%%  template package for technical guidance.
+%%%%%=============================================================================%%%%
+
+%\jyear{2021}%
+
+%% as per the requirement new theorem styles can be included as shown below
+\theoremstyle{thmstyleone}%
+\newtheorem{theorem}{Theorem}%  meant for continuous numbers
+%%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
+%% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
+\newtheorem{proposition}[theorem]{Proposition}% 
+%%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
+
+\theoremstyle{thmstyletwo}%
+\newtheorem{example}{Example}%
+\newtheorem{remark}{Remark}%
+
+\theoremstyle{thmstylethree}%
+\newtheorem{definition}{Definition}%
+
+\raggedbottom
+%%\unnumbered% uncomment this for unnumbered level heads
+
+\begin{document}
+
+\title[Article Title]{Breast Cancer Image Classification using Convolutional Neural Networks}
+
+%%=============================================================%%
+%% Prefix	-> \pfx{Dr}
+%% GivenName	-> \fnm{Joergen W.}
+%% Particle	-> \spfx{van der} -> surname prefix
+%% FamilyName	-> \sur{Ploeg}
+%% Suffix	-> \sfx{IV}
+%% NatureName	-> \tanm{Poet Laureate} -> Title after name
+%% Degrees	-> \dgr{MSc, PhD}
+%% \author*[1,2]{\pfx{Dr} \fnm{Joergen W.} \spfx{van der} \sur{Ploeg} \sfx{IV} \tanm{Poet Laureate} 
+%%                 \dgr{MSc, PhD}}\email{iauthor@gmail.com}
+%%=============================================================%%
+
+\author*[1]{\fnm{Julia} \sur{Graf}}\email{julia.graf@student.uni-tuebingen.de}
+\equalcont{These authors contributed equally to this work.}
+\author*[1]{\fnm{Jana} \sur{Hoffmann}}\email{jana.hoffmann2@student.uni-tuebingen.de}
+\equalcont{These authors contributed equally to this work.}
+
+\author*[1]{\fnm{Jessie} \sur{Midgley}}\email{jessie.midgley@student.uni-tuebingen.de}
+\equalcont{These authors contributed equally to this work.}
+\author*[1]{\fnm{Maike} \sur{Nägele}}\email{maike.naegele@student.uni-tuebingen.de}
+\equalcont{These authors contributed equally to this work.}
+
+\affil*[1]{\orgdiv{Algorithms in Bioinformatics}, \orgname{University of Tübingen}, \orgaddress{\street{Sand 14}, \city{Tübingen}, \postcode{72076}, \country{Germany}}}
+
+%%==================================%%
+%% sample for unstructured abstract %%
+%%==================================%%
+
+\abstract{Breast cancer is a frequently diagnosed and in many cases fatal disease, especially in females. The danger associated with breast cancer asks for further techniques to improve the prognosis of patients suffering from breast cancer. 
+Mammography is a widely used technique for screening breast cancer. In the present report, mammographic screens from the CBIS-DDSM Breast Cancer Image Datataset are used to perform binary breast cancer classification into malignant and benign. Classification is performed based on a machine learning approach using two different Convolutional Neural Networks (CNNs): VGG16 and ResNet50.Best performance is achieved with the ...  }
+%%================================%%
+%% Sample for structured abstract %%
+%%================================%%
+
+% \abstract{\textbf{Purpose:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
+% 
+% \textbf{Methods:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
+% 
+% \textbf{Results:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
+% 
+% \textbf{Conclusion:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.}
+
+\keywords{keyword1, Keyword2, Keyword3, Keyword4}
+
+%%\pacs[JEL Classification]{D8, H51}
+
+%%\pacs[MSC Classification]{35A01, 65L10, 65L12, 65L20, 65L70}
+
+\maketitle
+
+\section{Introduction}\label{sec1}
+ \subsection{Dataset}
+
+ 
+\section{Problem}\label{sec2}
+\section{Materials}\label{sec2}
+
+
+\section{Models}\label{sec2}
+\subsection{VGG16}\label{sec2}
+\subsection{ReseNet50}\label{sec2}
+
+\section{Optimizations}\label{sec2}
+\subsection{Prerprocessing Images}\label{sec2}
+\subsection{Last Layer Trainable}\label{sec2}
+\subsection{Fully Connected Layer vs. Global Average Pooling layer.}\label{sec2}
+\subsection{Learning Rate}\label{sec2}
+\subsection{Image Data Generator}\label{sec2}
+\subsection{Data Augmentation}\label{sec2}
+\subsection{Keeping Height/Width Ratio}\label{sec2}
+
+\section{Results}\label{sec2}
+\subsection{VGG16}\label{sec2}
+\subsection{ReseNet50}\label{sec2}
+\subsection{Cross Validation on Best Model}\label{sec2}
+\section{Discussion}\label{sec2}
+\section{Conclusion}\label{sec2}
+\subsection{Limitations}\label{sec2}
+\subsection{Outlook}\label{sec2}
+
+
+\section{This is an example for first level head---section head}\label{sec3}
+
+\subsection{This is an example for second level head---subsection head}\label{subsec2}
+
+\subsubsection{This is an example for third level head---subsubsection head}\label{subsubsec2}
+ 
+
+\begin{table}[h]
+\caption{Caption text}\label{tab1}%
+\begin{tabular}{@{}llll@{}}
+\toprule
+Column 1 & Column 2  & Column 3 & Column 4\\
+\midrule
+row 1    & data 1   & data 2  & data 3  \\
+row 2    & data 4   & data 5\footnotemark[1]  & data 6  \\
+row 3    & data 7   & data 8  & data 9\footnotemark[2]  \\
+\botrule
+\end{tabular}
+\footnotetext{Source: This is an example of table footnote. This is an example of table footnote.}
+\footnotetext[1]{Example for a first table footnote. This is an example of table footnote.}
+\footnotetext[2]{Example for a second table footnote. This is an example of table footnote.}
+\end{table}
+
+
+\begin{figure}[h]%
+\centering
+\includegraphics[width=0.9\textwidth]{fig.eps}
+\caption{This is a widefig. This is an example of long caption this is an example of long caption  this is an example of long caption this is an example of long caption}\label{fig1}
+\end{figure}
+
+For a quote environment, use \verb+\begin{quote}...\end{quote}+
+\begin{quote}
+Quoted text example. Aliquam porttitor quam a lacus. Praesent vel arcu ut tortor cursus volutpat. In vitae pede quis diam bibendum placerat. Fusce elementum
+convallis neque. Sed dolor orci, scelerisque ac, dapibus nec, ultricies ut, mi. Duis nec dui quis leo sagittis commodo.
+\end{quote}
+
+
+\bibliography{sn-bibliography}% common bib file
+%% if required, the content of .bbl file can be included here once bbl is generated
+%%\input sn-article.bbl
+
+
+\end{document}

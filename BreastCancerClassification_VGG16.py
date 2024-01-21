@@ -166,7 +166,7 @@ def vgg16():
     output = layers.Dense(1, activation='sigmoid')(x)
     
     model = Model(inputs=vgg16.input, outputs=output)
-    optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
+    optimizer = tf.keras.optimizers.Adam(learning_rate=0.00001)
 
     model.compile(
         loss='binary_crossentropy',
@@ -256,7 +256,7 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
 def main():
     model = vgg16()
     trained_model = train_model(model, model_type='VGG16', only_mass_cases=False, only_full_images=True, mode='tf',
-                                maintain_aspect_ratio=False, dicom=False)
+                                maintain_aspect_ratio=True, dicom=False)
     #X_train, Y_train, X_val, Y_val, X_test, Y_test = train_test_validation_split(model="VGG16",
     #                                                                             only_mass_cases=False,
     #                                                                             only_full_images=True,

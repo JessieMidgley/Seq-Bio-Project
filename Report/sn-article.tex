@@ -56,6 +56,12 @@ Version 2.1 April 2023
 \usepackage{algorithmicx}%
 \usepackage{algpseudocode}%
 \usepackage{listings}%
+\usepackage[
+backend=biber,
+style=alphabetic,
+sorting=ynt
+]{biblatex}
+\addbibresource{sn-bibliography.bib}
 %%%%
 
 %%%%%=============================================================================%%%%
@@ -227,6 +233,6 @@ convallis neque. Sed dolor orci, scelerisque ac, dapibus nec, ultricies ut, mi. 
 \end{quote}
 
 
-\bibliography{sn-bibliography}
+\printbibliography
 
 \end{document}

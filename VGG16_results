@@ -1,4 +1,4 @@
-Model	     		 	  								| LearningRate           | Flatten/ GlobalAverage | Adam/Nadam	 | self-written | DataImageGenerator  |val acc | val auc | test acc | test auc
+Model	     		 	  								| LearningRate           | Flatten       | Adam/Nadam	     | self-written | ImgGen     |val acc | val auc | test acc | test auc
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Maike: BaseModel     		  				| 0.0001		   						| Flatten		    | Adam	         | built-in     | no		      |0.6902  | 0.7526  | 0.6833   | 0.7409
 Jana: BaseModel			  	  				| 0.0001		   						| Flatten		    | Adam	         | built-in     | no		      |0.6933  | 0.7353  | 0.7212   | 0.7450

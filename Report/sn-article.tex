@@ -145,23 +145,27 @@ Mammography is a widely used technique for screening breast cancer. In the prese
 
 \maketitle
 
-\section{Introduction}\label{sec1}
- \subsection{Dataset}
-
+\section{Introduction}\label{Introduction}
+- stating Problem
  
-\section{Problem}\label{sec2}
-\section{Materials}\label{sec2}
+\section{Materials and Methods}\label{Materials}
+\subsection{Dataset}\label{Dataset}
+-What data did you use?
 
+\subsection{Data Preprocessing}\label{Preprocessing}
+-How did you preprocess it (if at all)?
 
-\section{Models}\label{sec2}
-\subsection{VGG16}\label{sec2}
-\subsection{ReseNet50}\label{sec2}
+\subsection{Models}\label{Models}
+-What models did you try?
+\subsubsection{VGG-16}\label{VGG-16}
+\subsubsection{ResNet50}\label{ResNet}
 
-\section{Optimizations}\label{sec2}
-\subsection{Prerprocessing Images}\label{sec2}
-\subsection{Last Layer Trainable}\label{sec2}
-\subsection{Fully Connected Layer vs. Global Average Pooling layer.}\label{sec2}
-\subsection{Learning Rate}\label{sec2}
+\subsection{Hyperparameter}\label{Hyperparameter}
+-What hyperparameter settings did you use?
+\subsubsection{Preprocessing Images}\label{Preprocessing}
+\subsubsection{Last Layer Trainable}\label{laystlayer}
+\subsubsection{Fully Connected Layer vs. Global Average Pooling layer.}\label{fullyConnected}
+\subsubsection{Learning Rate}\label{learningrate}
 The learning rate is a hyperparameter of the optimizer, adopted to achieve better performance of machine learning models.
 Yuanyuan et al. even claim that the learning rate is the hyperparameter with the largest influence on the classification accuracy of a model \cite{Yuanyuan_2020}.
 The learning rate defines the weight with which we are updating the parameter at each iteration and it gives an inside on how fast the model adapts \cite{Brownlee_2020}.  
@@ -169,26 +173,29 @@ Finding an optimal value for this parameter is challenging. In the result sectio
 Performance comparisons underline the importance of the parameter as the performance varies between different learning rates. 
 If it is too large, the model's performance might not be optimal because it might miss the optimal value \cite{Brownlee_2020}.
 If the learning rate is too small the training process might be time-consuming.
-\subsection{Image Data Generator}\label{sec2}
-\subsection{Data Augmentation}\label{sec2}
-\subsection{Keeping Height/Width Ratio}\label{sec2}
-
-\section{Results}\label{sec2}
-\subsection{VGG16}\label{sec2}
-\subsection{ReseNet50}\label{sec2}
-\subsection{Cross Validation on Best Model}\label{sec2}
-\section{Discussion}\label{sec2}
-\section{Conclusion}\label{sec2}
-\subsection{Limitations}\label{sec2}
-\subsection{Outlook}\label{sec2}
+\subsubsection{Image Data Generator}\label{ImageDataGenerator}
+\subsubsection{Data Augmentation}\label{DataAugmentation}
+\subsubsection{Keeping Height/Width Ratio}\label{HeightWidth}
 
 
-\section{This is an example for first level head---section head}\label{sec3}
+\section{Results}\label{Results}
+\subsection{VGG-16}\label{VGG-16_Results}
+\subsection{ResNet50}\label{ResNet_Results}
+\subsection{Cross Validation on Best Model}\label{CV_Results}
 
-\subsection{This is an example for second level head---subsection head}\label{subsec2}
+\section{Discussion}\label{Discussion}
+what you did in your project
+how you did it
+what the results mean?
+interpret your results and draw conclusion
 
-\subsubsection{This is an example for third level head---subsubsection head}\label{subsubsec2}
- 
+\section{Conclusion}\label{conclusion}
+ummarize your findings and discuss the implications of your work.
+\subsection{Limitations}\label{limitation}
+\subsection{Outlook}\label{outlook}
+suggest areas for future research 
+
+
 
 \begin{table}[h]
 \caption{Caption text}\label{tab1}%

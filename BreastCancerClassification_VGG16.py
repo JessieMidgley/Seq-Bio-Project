@@ -1,4 +1,4 @@
-#import cv2
+import cv2
 import csv
 import os
 from itertools import islice
@@ -10,21 +10,20 @@ from keras.layers import Flatten
 from keras.models import Model
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from tensorflow.keras.preprocessing.image import img_to_array
-from tensorflow.keras.preprocessing.image import load_img
 from sklearn.datasets import load_sample_image
 from sklearn.metrics import classification_report
 from PIL import Image
 from PIL import ImageOps, ImageFilter
 from keras.preprocessing.image import ImageDataGenerator
 from skimage import exposure
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.regularizers import l2
+from tensorflow import keras
+from keras.callbacks import EarlyStopping
+from keras.utils import to_categorical
+from keras.regularizers import l2
 import pandas as pd
 import image_preprocessing
 from tueplots import bundles
-import validation_cnn
+
 
 def load_image_paths(image_dir='./venv/CBIS-DDSM/csv/dicom_info.csv'):
     """Loads the image file paths from dicom_info.csv.
@@ -134,18 +133,18 @@ def train_test_validation_split(model, only_mass_cases=True, only_full_images=Tr
     full_cases['labels'] = full_cases['pathology'].replace(class_mapper)
 
     X_resized = np.array(full_cases['processed images'].tolist())
-    X_train, X_temp, y_train, y_temp = train_test_split(X_resized, full_cases['labels'].values, test_size=0.3,random_state=108)
-    X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.33,random_state=108)
+    X_train, X_temp, y_train, y_temp = train_test_split(X_resized, full_cases['labels'].values, test_size=0.3,
+                                                        random_state=108)
+    X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.33, random_state=108)
 
     # Convert integer labels to one-hot encoded labels
-    #num_classes = 2
-    #num_classes = 1
-    #y_train = to_categorical(y_train, num_classes)
-    #y_test = to_categorical(y_test, num_classes)
-    #y_val = to_categorical(y_val, num_classes)#
+    # num_classes = 2
+    # num_classes = 1
+    # y_train = to_categorical(y_train, num_classes)
+    # y_test = to_categorical(y_test, num_classes)
+    # y_val = to_categorical(y_val, num_classes)#
 
     return X_train, y_train, X_val, y_val, X_test, y_test
-
 
 
 def vgg16():
@@ -155,23 +154,23 @@ def vgg16():
                 A ResNet50 model with pretrained weights and custom layers.
     """
     print("use dropout and trainable")
-    vgg16 = VGG16(input_shape=(224,224,3),weights="imagenet",include_top=False)
-    
-    for layer in vgg16.layers:      
+    vgg16 = VGG16(input_shape=(224, 224, 3), weights="imagenet", include_top=False)
+
+    for layer in vgg16.layers:
         layer.trainable = False
-    #for layer in vgg16.layers[-2:]:
+    # for layer in vgg16.layers[-2:]:
     #    layer.trainable = True
-    #x = layers.Dropout(0.4)(vgg16.output)
+    # x = layers.Dropout(0.4)(vgg16.output)
     x = tf.keras.layers.Flatten()(vgg16.output)
     output = layers.Dense(1, activation='sigmoid')(x)
-    
+
     model = Model(inputs=vgg16.input, outputs=output)
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.00001)
 
     model.compile(
         loss='binary_crossentropy',
         optimizer=optimizer,
-        metrics=['accuracy','AUC']
+        metrics=['accuracy', 'AUC']
     )
 
     return model
@@ -206,13 +205,15 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
                                                                                  maintain_aspect_ratio=maintain_aspect_ratio,
                                                                                  dicom=dicom)
 
+
+
     # Stop training when the validation loss has stopped decreasing
-    callback = EarlyStopping(monitor='val_loss', mode='auto', patience=3, verbose=1, start_from_epoch=5,
+    callback = EarlyStopping(monitor='val_loss', mode='auto', patience=3, verbose=1,
                              restore_best_weights=True)
 
     # print model architecture
     model.summary()
-    
+
     # Train the model
     print('----------Training the model----------')
     history = model.fit(X_train,
@@ -244,7 +245,7 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
     ax2.set_xlabel('No. epoch')
     ax2.legend(loc='upper right')
     ax2.set_title('Training and Validation Loss')
-    plt.savefig('./training_results.pdf')
+    plt.savefig('./VGG16_BaseModel-Adam_results_0.00001.pdf')
 
     print('----------Evaluating the model on the test dataset----------')
     results = model.evaluate(X_test, y_test)
@@ -255,20 +256,17 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
 
 def main():
     model = vgg16()
-    trained_model = train_model(model, model_type='VGG16', only_mass_cases=False, only_full_images=True, mode='tf',
-                                maintain_aspect_ratio=True, dicom=False)
-    #X_train, Y_train, X_val, Y_val, X_test, Y_test = train_test_validation_split(model="VGG16",
+    trained_model = train_model(model, model_type='VGG16', only_mass_cases=False, only_full_images=True, mode='tf', maintain_aspect_ratio=False, dicom=False)
+    # X_train, Y_train, X_val, Y_val, X_test, Y_test = train_test_validation_split(model="VGG16",
     #                                                                             only_mass_cases=False,
     #                                                                             only_full_images=True,
     #                                                                             mode="tf",
     #                                                                             maintain_aspect_ratio=False,
     #                                                                             dicom=False)
-    #images = np.concatenate((X_train,X_val,X_test))
-    #labels = np.concatenate((Y_train,Y_val,Y_test))
-    #validation_cnn.validation(images, labels,3)
+    # images = np.concatenate((X_train,X_val,X_test))
+    # labels = np.concatenate((Y_train,Y_val,Y_test))
+    # validation_cnn.validation(images, labels,3)
+
 
 if __name__ == "__main__":
     main()
-
-
-

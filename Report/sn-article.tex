@@ -164,21 +164,21 @@ Mammography is a widely used technique for screening breast cancer. In the prese
 \subsection{Models}\label{Models}
 -What models did you try?
 \subsubsection{VGG-16}\label{VGG-16}
-\subsubsection{ResNet50}\label{ResNet}
+\subsubsection{ResNet-50}\label{ResNet}
+ResNet-50 is a variant of Residual Network (ResNet) architecture, which makes use of skip connections designed to address the vanishing gradient problem. The vanishing gradient problem typically arises during the training of deep neural networks, when the gradients of the loss function become continuously smaller as they are backpropagated through the network. Skip connections allow the gradients  to flow directly though the network, thereby mitigating the vanishing gradient problem. The ResNet-50 architecture consists of 50 layers of weights and several residual learning blocks with varying number of convolutional layers within each block. Each convolutional layer uses Batch normalization as a regularization method. In total, ResNet-50 is made up of a total of  48 convolutional layers, along with 2 pooling layers, producing a grand total of 23 million trainable parameters. The network takes images as input with a dimension of 224 x 224 pixels, and uses softmax in the final layer for the classification of input images \cite{he2015deep}.
 
 \subsection{Hyperparameter}\label{Hyperparameter}
 -What hyperparameter settings did you use?
 \subsubsection{Preprocessing Images}\label{Preprocessing}
 \subsubsection{Last Layer Trainable}\label{laystlayer}
 \subsubsection{Fully Connected Layer vs. Global Average Pooling layer.}\label{fullyConnected}
-\subsubsection{Learning Rate}\label{learningrate}
-The learning rate is a hyperparameter of the optimizer, adopted to achieve better performance of machine learning models.
-Yuanyuan et al. even claim that the learning rate is the hyperparameter with the largest influence on the classification accuracy of a model \cite{Yuanyuan_2020}.
-The learning rate defines the weight with which we are updating the parameter at each iteration and it gives an inside on how fast the model adapts \cite{Brownlee_2020}.  
-Finding an optimal value for this parameter is challenging. In the result section, results for different values of the learning rate are presented. 
-Performance comparisons underline the importance of the parameter as the performance varies between different learning rates. 
-If it is too large, the model's performance might not be optimal because it might miss the optimal value \cite{Brownlee_2020}.
-If the learning rate is too small the training process might be time-consuming.
+\subsubsection{Optimizer and Learning Rate}\label{learningrate}
+We compare the performance of two different optimizers, namely Adam and Nadam. Adam computes individual adaptive learning rates for different parameters from estimates of first and second moments of the gradients \cite{kingma2017adam}. Nadam is an extension of the Adam optimizer that incorporates Nesterov momentum and can lead to improved convergence \cite{dozat.2016}.
+The learning rate is a hyperparameter of the optimizer, determining the weight with which parameters are updated at each iteration during optimization \cite{Brownlee_2020}.
+Yuanyuan et al. even claim that the learning rate is the hyperparameter with the largest influence on the classification accuracy of a model \cite{Yuanyuan_2020}. 
+We compare the two optimization algorithms at three different learning rates.
+With a larger learning rate, the model tends to converge faster, however with an increased risk of overshooting the optimal value of the loss function \cite{Brownlee_2020}.
+If the learning rate is too small, the training process might be time-consuming.
 \subsubsection{Image Data Generator}\label{ImageDataGenerator}
 \subsubsection{Data Augmentation}\label{DataAugmentation}
 \subsubsection{Keeping Height/Width Ratio}\label{HeightWidth}
@@ -186,7 +186,7 @@ If the learning rate is too small the training process might be time-consuming.
 
 \section{Results}\label{Results}
 \subsection{VGG-16}\label{VGG-16_Results}
-\subsection{ResNet50}\label{ResNet_Results}
+\subsection{ResNet-50}\label{ResNet_Results}
 \subsection{Cross Validation on Best Model}\label{CV_Results}
 
 \section{Discussion}\label{Discussion}

@@ -100,7 +100,7 @@ def resize_image(img, maintain_aspect_ratio=False):
             height = 224
             width = int(224 * ratio)
         img.thumbnail((width, height))
-        new_img = Image.new("L", (224, 224))
+        new_img = Image.new("RGB", (224, 224))
         new_img.paste(img)
         return np.array(new_img)
 

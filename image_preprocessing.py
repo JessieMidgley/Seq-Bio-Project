@@ -83,7 +83,6 @@ def resize_image(img, maintain_aspect_ratio=False):
         Returns:
                 A numpy array representing the resized image (grayscale, values in range [0, 255]).
     """
-
     if not maintain_aspect_ratio:
         return resize(img, output_shape=(224, 224), anti_aliasing=False, order=0)
     else:
@@ -100,7 +99,7 @@ def resize_image(img, maintain_aspect_ratio=False):
             height = 224
             width = int(224 * ratio)
         img.thumbnail((width, height))
-        new_img = Image.new("RGB", (224, 224))
+        new_img = Image.new("L", (224, 224))
         new_img.paste(img)
         return np.array(new_img)
 

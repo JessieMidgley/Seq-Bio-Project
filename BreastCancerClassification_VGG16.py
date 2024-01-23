@@ -23,6 +23,8 @@ from keras.regularizers import l2
 import pandas as pd
 import image_preprocessing
 from tueplots import bundles
+import validation_cnn
+import dataaugmentation
 
 
 def load_image_paths(image_dir='./venv/CBIS-DDSM/csv/dicom_info.csv'):
@@ -90,7 +92,7 @@ def fix_image_path(data_frame, only_full_images=True):
 
 
 def train_test_validation_split(model, only_mass_cases=True, only_full_images=True, mode='tf',
-                                maintain_aspect_ratio=False, dicom=False):
+                                maintain_aspect_ratio=False, dicom=False, aug=False):
     """Splits data into train, test, and validation sets (70, 20, 10).
 
             Parameters:
@@ -104,6 +106,7 @@ def train_test_validation_split(model, only_mass_cases=True, only_full_images=Tr
                     - tf: will apply the preprocessing function, that the tf.keras.applications package provides.
                 maintain_aspect_ratio (bool): Whether to maintain aspect ratio when resizing the image.
                 dicom (bool): Whether the images are in DICOM format (default: False).
+                aug (bool): Whether image augmentation is used or not (defaul: False).
 
             Returns:
                 X_train, y_train (np.array): The processed training images and the training labels (one-hot encoded).
@@ -126,8 +129,9 @@ def train_test_validation_split(model, only_mass_cases=True, only_full_images=Tr
         full_cases = pd.concat([full_cases, calc_cases_train, calc_cases_test], axis=0)
 
     # Apply preprocessor to data
+    
     full_cases['processed images'] = full_cases['image file path'].apply(lambda x: image_preprocessing.preprocess_image(
-        x, mode=mode, model=model, maintain_aspect_ratio=maintain_aspect_ratio, dicom=dicom))
+        x, mode=mode, model=model, maintain_aspect_ratio=maintain_aspect_ratio, dicom=dicom, aug=aug))
     # Apply class mapper to pathology column
     class_mapper = {'MALIGNANT': 1, 'BENIGN': 0, 'BENIGN_WITHOUT_CALLBACK': 0}
     full_cases['labels'] = full_cases['pathology'].replace(class_mapper)
@@ -136,7 +140,27 @@ def train_test_validation_split(model, only_mass_cases=True, only_full_images=Tr
     X_train, X_temp, y_train, y_temp = train_test_split(X_resized, full_cases['labels'].values, test_size=0.3,
                                                         random_state=108)
     X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.33, random_state=108)
+    
+    if aug:
+        X_train, y_train = dataaugmentation.dataaugmentation(X_train, y_train, maintain_aspect_ratio=maintain_aspect_ratio)
+        if model == "VGG16":
+            X_test = tf.keras.applications.vgg16.preprocess_input(X_test)
+            X_val = tf.keras.applications.vgg16.preprocess_input(X_val)
+        elif model == "ResNet50":
+            X_test = tf.keras.applications.resnet50.preprocess_input(X_test)
+            X_val = tf.keras.applications.resnet50.preprocess_input(X_val)
+            
+        n = 0
+        for img in X_train:
+            if model == "VGG16":
+                X_train[n] = tf.keras.applications.vgg16.preprocess_input(img)
+            elif model == "ResNet50":
+                X_train[n] = tf.keras.applications.resnet50.preprocess_input(img)
+            n = n + 1
 
+        X_train = np.array(X_train)
+        y_train = np.array(y_train)
+    
     # Convert integer labels to one-hot encoded labels
     # num_classes = 2
     # num_classes = 1
@@ -148,17 +172,16 @@ def train_test_validation_split(model, only_mass_cases=True, only_full_images=Tr
 
 
 def vgg16():
-    """Instantiates the ResNet50 architecture.
+    """Instantiates the VGG16 architecture.
 
             Returns:
-                A ResNet50 model with pretrained weights and custom layers.
+                A VGG16 model with pretrained weights and custom layers.
     """
-    print("use dropout and trainable")
     vgg16 = VGG16(input_shape=(224, 224, 3), weights="imagenet", include_top=False)
 
     for layer in vgg16.layers:
         layer.trainable = False
-    # for layer in vgg16.layers[-2:]:
+    #for layer in vgg16.layers[-2:]:
     #    layer.trainable = True
     # x = layers.Dropout(0.4)(vgg16.output)
     x = tf.keras.layers.Flatten()(vgg16.output)
@@ -177,7 +200,7 @@ def vgg16():
 
 
 def train_model(model, model_type, only_mass_cases=True, only_full_images=True, mode='tf', maintain_aspect_ratio=False,
-                dicom=False):
+                dicom=False, aug=False):
     """Train the model on the CBIS-DDSM dataset and evaluate it on the test dataset.
 
             Parameters:
@@ -192,6 +215,7 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
                     - tf: will apply the preprocessing function, that the tf.keras.applications package provides.
                 maintain_aspect_ratio (bool): Whether to maintain aspect ratio when resizing the image.
                 dicom (bool): Whether the images are in DICOM format (default: False).
+                aug (bool): Whether image augmentation is used or not (defaul: False).
 
             Returns:
                 The trained ResNet50 model.
@@ -203,7 +227,8 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
                                                                                  only_full_images=only_full_images,
                                                                                  mode=mode,
                                                                                  maintain_aspect_ratio=maintain_aspect_ratio,
-                                                                                 dicom=dicom)
+                                                                                 dicom=dicom,
+                                                                                 aug=aug)
 
 
 
@@ -213,13 +238,18 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
 
     # print model architecture
     model.summary()
-
+    train_datagen = ImageDataGenerator(rotation_range=40,
+                                       width_shift_range=0.2,
+                                       height_shift_range=0.2,
+                                       shear_range=0.2,
+                                       zoom_range=0.2,
+                                       horizontal_flip=True,
+                                       fill_mode='nearest')
     # Train the model
     print('----------Training the model----------')
     history = model.fit(X_train,
                         y_train,
                         epochs=50,
-                        batch_size=1,
                         validation_data=(X_val, y_val),
                         callbacks=[callback],
                         verbose=2)
@@ -245,7 +275,7 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
     ax2.set_xlabel('No. epoch')
     ax2.legend(loc='upper right')
     ax2.set_title('Training and Validation Loss')
-    plt.savefig('./VGG16_BaseModel-Adam_results_0.00001.pdf')
+    plt.savefig('./VGG16_BaseModel-Adam_results_0.00001_lasttrainable.pdf')
 
     print('----------Evaluating the model on the test dataset----------')
     results = model.evaluate(X_test, y_test)
@@ -257,18 +287,19 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
 def main():
     model = vgg16()
 
-    trained_model = train_model(model, model_type='VGG16', only_mass_cases=False, only_full_images=True, mode='tf', maintain_aspect_ratio=False, dicom=False)
-
-    # X_train, Y_train, X_val, Y_val, X_test, Y_test = train_test_validation_split(model="VGG16",
-    #                                                                             only_mass_cases=False,
-    #                                                                             only_full_images=True,
-    #                                                                             mode="tf",
-    #                                                                             maintain_aspect_ratio=False,
-    #                                                                             dicom=False)
-    # images = np.concatenate((X_train,X_val,X_test))
-    # labels = np.concatenate((Y_train,Y_val,Y_test))
-    # validation_cnn.validation(images, labels,3)
-
+    trained_model = train_model(model, model_type='VGG16', only_mass_cases=False, only_full_images=True, mode='tf', maintain_aspect_ratio=False, dicom=False, aug=True)
+    '''
+    X_train, Y_train, X_val, Y_val, X_test, Y_test = train_test_validation_split(model="VGG16",
+                                                                                 only_mass_cases=False,
+                                                                                 only_full_images=True,
+                                                                                 mode="tf",
+                                                                                 maintain_aspect_ratio=False,
+                                                                                 dicom=False)
+    images = np.concatenate((X_train,X_val,X_test))
+    labels = np.concatenate((Y_train,Y_val,Y_test))
+    
+    validation_cnn.validation(images, labels,3)
+    '''
 
 if __name__ == "__main__":
     main()

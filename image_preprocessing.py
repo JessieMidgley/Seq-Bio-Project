@@ -136,6 +136,7 @@ def preprocess_image(path, mode, model, maintain_aspect_ratio=False, dicom=False
                     - VGG16: If mode is 'tf', will apply tf.keras.applications.vgg16.preprocess_input().
                 maintain_aspect_ratio (bool): Whether to maintain aspect ratio when resizing the image.
                 dicom (bool): Whether the images are in DICOM format (default: False).
+                aug (bool): Whether image augmentation is used or not (default: False)
 
             Returns:
                 A numpy array representing the processed image.

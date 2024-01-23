@@ -36,27 +36,45 @@ import BreastCancerClassification_VGG16
 
 """
 def validation(images, labels, k):
+    
     images = images[0:100]
     labels = labels[0:100]
+
+    # split data in five parts of equal size
+    splitted_images = np.array_split(images,k)
+    splitted_labels = np.array_split(labels,k)
+
     results_auc = []
     results_acc = []
     
     for i in range(k):
+        print(i)
         model = BreastCancerClassification_VGG16.vgg16()
-        X_train, X_test,Y_train, Y_test = train_test_split(images, labels, test_size=0.20, random_state=random.randint(0,1000),shuffle=True)
-    
-        callback = EarlyStopping(monitor='loss', mode='auto', patience=3, verbose=1, start_from_epoch=5,
-                                 restore_best_weights=True)
+        
+        y_test = splitted_labels[i]
+        y_train = []
+        for j in range(k):
+            if j != i:
+                y_train.append(splitted_labels[j])
+        y_train = np.concatenate(y_train,0)
+        
+        X_test = splitted_images[i]
+        X_train = []
+        for j in range(k):
+            if j != i:
+                X_train.append(splitted_images[j])
+        X_train = np.concatenate(X_train,0)
+        
+        # !adjust number of epochs to best performance on validation set
         model.fit(
             X_train,
-            Y_train,
+            y_train,
             batch_size=1,
             epochs=10,
-            callbacks=[callback],
             verbose=2
         )
         
-        result = model.evaluate(X_test,Y_test)
+        result = model.evaluate(X_test,y_test)
         results_auc.append(result[2])
         results_acc.append(result[1])
         

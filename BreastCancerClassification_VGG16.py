@@ -249,7 +249,7 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
     print('----------Training the model----------')
     history = model.fit(X_train,
                         y_train,
-                        epochs=50,
+                        epochs=1,
                         validation_data=(X_val, y_val),
                         callbacks=[callback],
                         verbose=2)
@@ -275,7 +275,7 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
     ax2.set_xlabel('No. epoch')
     ax2.legend(loc='upper right')
     ax2.set_title('Training and Validation Loss')
-    plt.savefig('./VGG16_BaseModel-Adam_results_0.00001_lasttrainable.pdf')
+    plt.savefig('./VGG16_BaseModel-Adam_results_0.00001_augmentation.pdf')
 
     print('----------Evaluating the model on the test dataset----------')
     results = model.evaluate(X_test, y_test)
@@ -285,21 +285,21 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
 
 
 def main():
-    model = vgg16()
+    #model = vgg16()
 
-    trained_model = train_model(model, model_type='VGG16', only_mass_cases=False, only_full_images=True, mode='tf', maintain_aspect_ratio=False, dicom=False, aug=True)
-    '''
+    #trained_model = train_model(model, model_type='VGG16', only_mass_cases=False, only_full_images=True, mode='tf', maintain_aspect_ratio=False, dicom=False, aug=True)
+    
     X_train, Y_train, X_val, Y_val, X_test, Y_test = train_test_validation_split(model="VGG16",
                                                                                  only_mass_cases=False,
                                                                                  only_full_images=True,
                                                                                  mode="tf",
                                                                                  maintain_aspect_ratio=False,
                                                                                  dicom=False)
-    images = np.concatenate((X_train,X_val,X_test))
-    labels = np.concatenate((Y_train,Y_val,Y_test))
+    images_trainval = np.concatenate((X_train,X_val),axis=0)
+    labels_trainval = np.concatenate((Y_train,Y_val),axis=0)
     
-    validation_cnn.validation(images, labels,3)
-    '''
+    validation_cnn.validation(images_trainval, labels_trainval, X_test, Y_test,"VGG16",3)
+    
 
 if __name__ == "__main__":
     main()

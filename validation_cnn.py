@@ -91,8 +91,12 @@ def validation(images_trainval, labels_trainval, images_test, labels_test, mode,
     acc = fmean(results_acc)
     auc = fmean(results_auc)
     plt.savefig("./roc_test.pdf")
+    print("accuracy of all runs:")
+    print(results_acc)
     print("The mean accuracy is:")
     print(acc)
+    print("auc of all runs:")
+    print(results_auc)
     print("The mean auc is:")
     print(auc)
     return acc, auc

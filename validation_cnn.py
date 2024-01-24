@@ -57,13 +57,14 @@ def validation(images_trainval, labels_trainval, images_test, labels_test, mode,
 
         X_train, X_val, Y_train, y_val = train_test_split(images_trainval, labels_trainval, test_size=0.125, random_state=None)
         
-        callback = EarlyStopping(monitor='loss', mode='auto', patience=3, verbose=1, start_from_epoch=5,
+        callback = EarlyStopping(monitor='val_loss', mode='auto', patience=3, verbose=1, start_from_epoch=5,
                                  restore_best_weights=True)
         model.fit(
             X_train,
             Y_train,
             batch_size=1,
             epochs=50,
+            validation_data=(X_val, y_val),
             callbacks=[callback],
             verbose=2
         )

@@ -286,14 +286,15 @@ what the results mean?
 interpret your results and draw conclusion
 
 \section{Conclusion}\label{conclusion}
-ummarize your findings and discuss the implications of your work.
+In the following report, two existing CNN architectures, namely VGG-16 and ResNet-50 are used to classify mammogram images into benign and malignant.\\
+Additionally, data augmentation, data preprocessing, and hyperparamter tuning is performed to achieve better predictions of classes.
+Performance analysis of the models indicates the possibilities and benefits of artificial neural networks in health-related issues. \\
+For both models an accuracy and AUC of over 65\% is achieved.
+Although, the values indicate a moderate performance it is important to consider the limitations for further improvements.
 \subsection{Limitations}\label{limitation}
 The CBIS-DDSM dataset, used for classification, consists of 1644 images. For a model to perform good classification the size of the available training data plays an important role. As the data is taken from a publicly available source, there is a limited amount of data available. \\
 Additionally, the performed classification treats "benign-without-callback"  and "benign" identically. However, to ensure correct classification one might have to consider further information for the classification of these images.\\
 Finally, hyperparameter tuning was restricted due to time and memory issues. As the servers were not accessible during the time of model training, all the hyperparameter tuning was run locally leading to long runtimes and memory-related issues. 
-
-\subsection{Outlook}\label{outlook}
-suggest areas for future research 
 
 
 

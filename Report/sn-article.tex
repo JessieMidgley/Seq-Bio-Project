@@ -175,7 +175,8 @@ This is followed by 3 dense layers flattening the output of the previous layers 
 \subsection{Hyperparameter}\label{Hyperparameter}
 -What hyperparameter settings did you use?
 \subsubsection{Preprocessing Images}\label{Preprocessing}
-\subsubsection{Last Layer Trainable}\label{laystlayer}
+\subsubsection{Fine Tuning}\label{finetuning}
+We experiment with re-training the last layer of the pre-trained model with the new images. This means that the original weights from the first to the penultimate layer are preserved or ``frozen", and the last layer is replaced with new weights in order to learn task-specific features. In addition, a final fully-connected layer with 128 units was added to the ResNet-50 model in order to increase the capacity of the model.
 \subsubsection{Flatten vs. Global Average Pooling}\label{fullyConnected}
 In order to pass the output of the last convolutional layer to the fully-connected layer and then further to the softmax layer, the vector needs to be converted into a one-dimensional vector. This can be done by applying a flatten layer where the resulting one-dimensional vector contains the same values as before the flattening.\\
 Another layer that we can add to reduce the dimensions is a Global Average Pooling layer. This layer creates one feature map for each class of the output and the average of each is passed to the softmax layer \cite{Admin_2023}.
@@ -293,7 +294,7 @@ For both models an accuracy and AUC of over 65\% is achieved.
 Although, the values indicate a moderate performance it is important to consider the limitations for further improvements.
 \subsection{Limitations}\label{limitation}
 The CBIS-DDSM dataset, used for classification, consists of 1644 images. For a model to perform good classification the size of the available training data plays an important role. As the data is taken from a publicly available source, there is a limited amount of data available. \\
-Additionally, the performed classification treats "benign-without-callback"  and "benign" identically. However, to ensure correct classification one might have to consider further information for the classification of these images.\\
+Additionally, the performed classification treats ``benign-without-callback"  and ``benign" identically. However, to ensure correct classification one might have to consider further information for the classification of these images.\\
 Finally, hyperparameter tuning was restricted due to time and memory issues. As the servers were not accessible during the time of model training, all the hyperparameter tuning was run locally leading to long runtimes and memory-related issues. 
 
 

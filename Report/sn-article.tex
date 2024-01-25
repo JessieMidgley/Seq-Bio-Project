@@ -180,7 +180,7 @@ We compare the two optimization algorithms at three different learning rates.
 With a larger learning rate, the model tends to converge faster, however with an increased risk of overshooting the optimal value of the loss function \cite{Brownlee_2020}.
 If the learning rate is too small, the training process might be time-consuming.
 \subsubsection{Image Data Generator}\label{ImageDataGenerator}
-To generalize the models we test the preformace when using an ImageDataGeneretor from tensorflow~\cite{IDG}. The ImageDataGenerator changes the input images randomly. We use the following parameters:\\
+For the training we only have 2300 images to train on after splitting the images of the dataset in train, validation and test sets. We compare the performance of our model on these original images in the train set to the images of the train set randomly modified by an ImageDataGenerator from tensorflow before each epoch~\cite{IDG}. We use the following parameters:\\
 \begin{itemize}
 \item rotation\_range=40
 \item width\_shift\_range=0.2
@@ -190,18 +190,18 @@ To generalize the models we test the preformace when using an ImageDataGeneretor
 \item horizontal\_flip=True
 \item fill\_mode='nearest'
 \end{itemize}
-So the input images get randomly flipped by a range between 0° and 40°, shifted on their horizontal axis up to 20\% of their width, shifted on their vertical axis up to 20\% of their height, the shear transformation is applied to them with an angel of 0.2°, zoomed by a factor within a range of 0.8 and 1.2 and flipped from left to right. The fill mode fills pixels outside as the nearest pixel. Through these changes of the input, the models see a lot of differnt images in the training phase. The total amount of images the model sees per epoch is unchanged.
+So the input images get randomly flipped by a range between 0° and 40°, shifted on their horizontal axis up to 20\% of their width, shifted on their vertical axis up to 20\% of their height, zoomed by a factor within a range of 0.8 and 1.2, flipped from left to right and the shear transformation is applied to them with an angel of 0.2°. The fill mode fills pixels outside as the nearest pixel. The model than sees more different images. The amount of images that gets seen in each epoch is the same as before.\\
 \subsubsection{Data Augmentation}\label{DataAugmentation}
-We also test the performace on an augmentation method we wrote ourself, to increase the amount of images the model sees in each epoch. Therefor we implemented the augmentation techniques Montaha et. al.~\cite{Montaha2021} used for the BrestNet18 model. Through the augmentation we generate from each input image 7 new ones, by flipping verticaly, horizonticaly, verticaly and horizontical and rotateing the original and the horizontical flipped image by -30° abd 30°.
+We also test the performance on an augmentation method we wrote ourselves to increase the amount of images the model sees in each epoch. Therefor we implemented the augmentation techniques Montaha et. al. used in their work of the BrestNet18 model~\cite{Montaha2021}. Through the augmentation we generate from each input image of the train set 7 new ones, by flipping vertically, horizontally, vertically and horizontally and rotating the original and the horizontal flipped image by -30° and 30°. After the augmentation the train set includes 18.400 images.\\
 \subsubsection{Keeping Height/Width Ratio}\label{HeightWidth}
-Since the images in the dataset we use don't have a height and width of 224 pixels and the models we use have these input dimensions we need to resize the images before we can use them. The build-in function resize from scikit-image doesn't keep the aspect ratio of the pictures it processes~\cite{resize}. Since this can change important parts of the image we wrote a function that keeps the height/width ratio unchanged while resizing the images. For this we resize the image to the the maximum size so it still fits in the dimensions (224px,224px) and so that the ratio is kept and fill the parts missing to get a image with the dimensions (224px,224px) black. We compare the performance of the models on images of these two resizing methods.\\
+Since the images in the dataset we use don't have a height and width of 224 pixels and the models we use have these input dimensions we need to resize the images before we can use them. The build-in function resize from scikit-image doesn't keep the aspect ratio of the pictures it processes~\cite{resize}. Since this can distort important parts of the image we wrote a function that keeps the height/width ratio unchanged while resizing the images. For this we resize the image to the the maximum size in which it still fits in the dimensions (224px,224px) and in which the ratio is kept and fill the parts missing to get a image with the dimensions (224px,224px) black. We compare the performance of the models on images of these two resizing methods.\\
 
 
 \section{Results}\label{Results}
 \subsection{VGG-16}\label{VGG-16_Results}
 \subsection{ResNet-50}\label{ResNet_Results}
 \subsection{Validation on Best Model}\label{CV_Results}
-To evaluate the best VGG16 and ResNet50 model we train them on 5 different train validation splits and use our in the beginning seperated test set to evaluate the trained model. We generate the different splits by applying the train\_test\_split function from scikit-learn with five random generated random\_state parameters. In the end we plot the ROC-curve for each of these runs and compute the mean test accuracy and the mean test auc.\\
+To evaluate the best VGG16 and ResNet50 model we train them on 5 different train validation splits and use our in the beginning seperated test set to evaluate the trained model. We generate the different splits by applying the train\_test\_split function from scikit-learn with five times and set the random\_state parameter to None~\cite{TTS}. This way for each run a different values is being used. In the end we plot the ROC-curve for each of these runs and compute the mean test accuracy and the mean test auc.\\
 
 \section{Discussion}\label{Discussion}
 what you did in your project

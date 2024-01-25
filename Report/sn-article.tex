@@ -288,6 +288,9 @@ interpret your results and draw conclusion
 \section{Conclusion}\label{conclusion}
 ummarize your findings and discuss the implications of your work.
 \subsection{Limitations}\label{limitation}
+The CBIS-DDSM dataset, used for classification, consists of 1644 images. For a model to perform good classification the size of the available training data plays an important role. As the data is taken from a publicly available source, there is a limited amount of data available. \\
+Additionally, the performed classification treats "benign-without-callback"  and "benign" identically. However, to ensure correct classification one might have to consider further information for the classification of these images.\\
+Finally, hyperparameter tuning was restricted due to time and memory issues. As the servers were not accessible during the time of model training, all the hyperparameter tuning was run locally leading to long runtimes and memory-related issues. 
 
 \subsection{Outlook}\label{outlook}
 suggest areas for future research 

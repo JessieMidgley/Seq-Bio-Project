@@ -178,7 +178,7 @@ This is followed by 3 dense layers flattening the output of the previous layers 
 \subsubsection{Last Layer Trainable}\label{laystlayer}
 \subsubsection{Flatten vs. Global Average Pooling}\label{fullyConnected}
 In order to pass the output of the last convolutional layer to the fully-connected layer and then further to the softmax layer, the vector needs to be converted into a one-dimensional vector. This can be done by applying a flatten layer where the resulting one-dimensional vector contains the same values as before the flattening.\\
-Another layer that we can add to reduce the dimensions is a global average pooling layer. This layer creates for each class of the output one feature map and the average of each is passed to the softmax layer \cite{Admin_2023}.
+Another layer that we can add to reduce the dimensions is a Global Average Pooling layer. This layer creates one feature map for each class of the output and the average of each is passed to the softmax layer \cite{Admin_2023}.
 \subsubsection{Optimizer and Learning Rate}\label{learningrate}
 We compare the performance of two different optimizers, namely Adam and Nadam. Adam computes individual adaptive learning rates for different parameters from estimates of first and second moments of the gradients \cite{kingma2017adam}. Nadam is an extension of the Adam optimizer that incorporates Nesterov momentum and can lead to improved convergence \cite{dozat.2016}.
 The learning rate is a hyperparameter of the optimizer, determining the weight with which parameters are updated at each iteration during optimization \cite{Brownlee_2020}.
@@ -201,7 +201,7 @@ So the input images get randomly flipped by a range between 0° and 40°, shifte
 \subsubsection{Data Augmentation}\label{DataAugmentation}
 We also test the performance on an augmentation method we wrote ourselves to increase the amount of images the model sees in each epoch. Therefor we implemented the augmentation techniques Montaha et. al. used in their work of the BrestNet18 model~\cite{Montaha2021}. Through the augmentation we generate from each input image of the train set 7 new ones, by flipping vertically, horizontally, vertically and horizontally and rotating the original and the horizontal flipped image by -30° and 30°. After the augmentation the train set includes 18.400 images.\\
 \subsubsection{Keeping Height/Width Ratio}\label{HeightWidth}
-Since the images in the dataset we use don't have a height and width of 224 pixels and the models we use have these input dimensions we need to resize the images before we can use them. The build-in function resize from scikit-image doesn't keep the aspect ratio of the pictures it processes~\cite{resize}. Since this can distort important parts of the image we wrote a function that keeps the height/width ratio unchanged while resizing the images. For this we resize the image to the the maximum size in which it still fits in the dimensions (224px,224px) and in which the ratio is kept and fill the parts missing to get a image with the dimensions (224px,224px) black. We compare the performance of the models on images of these two resizing methods.\\
+Since the images in the dataset don't have a height and width of 224 pixels and the models we use have these input dimensions we need to resize the images before we can use them. The build-in function resize from scikit-image doesn't keep the aspect ratio of the pictures it processes~\cite{resize}. Since this can distort important parts of the image we wrote a function that keeps the height/width ratio unchanged while resizing the images. For this we resize the image to the the maximum size in which it still fits in the dimensions (224px,224px) and in which the ratio is kept and fill the parts missing to get a image with the dimensions (224px,224px) black. We compare the performance of the models on images of these two resizing methods.\\
 
 \subsection{Model Evaluation}
 
@@ -210,7 +210,7 @@ Since the images in the dataset we use don't have a height and width of 224 pixe
 \subsection{VGG-16}\label{VGG-16_Results}
 \subsection{ResNet-50}\label{ResNet_Results}
 \subsection{Validation on Best Model}\label{CV_Results}
-To evaluate the best VGG16 and ResNet50 model we train them on 5 different train validation splits and use our in the beginning seperated test set to evaluate the trained model. We generate the different splits by applying the train\_test\_split function from scikit-learn with five times and set the random\_state parameter to None~\cite{TTS}. This way for each run a different values is being used. In the end we plot the ROC-curve for each of these runs and compute the mean test accuracy and the mean test auc.\\
+To evaluate the best VGG16 and ResNet50 model we trained them on 5 different train validation splits and use our pre-defined test set to evaluate the trained model. We generate the different splits by applying the train\_test\_split function from scikit-learn with five times and set the random\_state parameter to None~\cite{TTS}. This way for each run a different values is being used. In the end we plot the ROC-curve for each of these runs and compute the mean test accuracy and the mean test auc.\\
 
 \section{Results}\label{Results}
 
@@ -262,7 +262,7 @@ built-in   & no  & Nadam & GAP  & 0.00001 & no & no & 0.6871  & 0.7617     \\
 \footnotetext[2]{using built-in Image Data Generator}
 \footnotetext[3]{Keeping height/width ratio}
 \footnotetext[4]{Accuracy on validation set}
-\footnotetext[3]{AUC on validation set}
+\footnotetext[5]{AUC on validation set}
 \end{table}
 
 \begin{figure}[h]%

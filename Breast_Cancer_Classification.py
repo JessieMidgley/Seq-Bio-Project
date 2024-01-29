@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, GlobalAveragePooling2D
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.optimizers.legacy import Nadam
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -16,6 +16,8 @@ from keras.optimizers.schedules import ExponentialDecay
 from tensorflow.keras.regularizers import l2
 
 import image_preprocessing
+import data_augmentation
+import validation
 
 
 def load_image_paths(image_dir='./venv/CBIS-DDSM/csv/dicom_info.csv'):
@@ -83,7 +85,7 @@ def fix_image_path(data_frame, only_full_images=True):
 
 
 def train_test_validation_split(model, only_mass_cases=True, only_full_images=True, mode='tf',
-                                maintain_aspect_ratio=False, dicom=False):
+                                maintain_aspect_ratio=False, dicom=False, augmentation=False):
     """Splits data into train, test, and validation sets (70, 20, 10).
 
             Parameters:
@@ -97,6 +99,7 @@ def train_test_validation_split(model, only_mass_cases=True, only_full_images=Tr
                     - tf: will apply the preprocessing function, that the tf.keras.applications package provides.
                 maintain_aspect_ratio (bool): Whether to maintain aspect ratio when resizing the image.
                 dicom (bool): Whether the images are in DICOM format (default: False).
+                augmentation (bool): Whether to apply data augmentation to enlarge the training set.
 
             Returns:
                 X_train, y_train (np.array): The processed training images and the training labels (one-hot encoded).
@@ -119,15 +122,41 @@ def train_test_validation_split(model, only_mass_cases=True, only_full_images=Tr
         full_cases = pd.concat([full_cases, calc_cases_train, calc_cases_test], axis=0)
 
     # Apply preprocessor to data
+    print('----------Preprocessing the images----------')
     full_cases['processed images'] = full_cases['image file path'].apply(lambda x: image_preprocessing.preprocess_image(
-        x, mode=mode, model=model, maintain_aspect_ratio=maintain_aspect_ratio, dicom=dicom))
+        x, mode=mode, model=model, maintain_aspect_ratio=maintain_aspect_ratio, dicom=dicom, augmentation=augmentation))
     # Apply class mapper to pathology column
     class_mapper = {'MALIGNANT': 1, 'BENIGN': 0, 'BENIGN_WITHOUT_CALLBACK': 0}
     full_cases['labels'] = full_cases['pathology'].replace(class_mapper)
 
     X_resized = np.array(full_cases['processed images'].tolist())
-    X_train, X_temp, y_train, y_temp = train_test_split(X_resized, full_cases['labels'].values, test_size=0.3)
-    X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.33)
+
+    X_train, X_temp, y_train, y_temp = train_test_split(X_resized, full_cases['labels'].values, test_size=0.3,
+                                                        random_state=108)
+    X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.33, random_state=108)
+
+    if augmentation:
+        # Apply data augmentation to enlarge the training set
+        print('----------Applying data augmentation to the training set----------')
+        X_train, y_train = data_augmentation.dataaugmentation(X_train, y_train,
+                                                              maintain_aspect_ratio=maintain_aspect_ratio)
+        if model == "VGG16":
+            X_test = tf.keras.applications.vgg16.preprocess_input(X_test)
+            X_val = tf.keras.applications.vgg16.preprocess_input(X_val)
+        elif model == "ResNet50":
+            X_test = tf.keras.applications.resnet50.preprocess_input(X_test)
+            X_val = tf.keras.applications.resnet50.preprocess_input(X_val)
+
+        n = 0
+        for img in X_train:
+            if model == "VGG16":
+                X_train[n] = tf.keras.applications.vgg16.preprocess_input(img)
+            elif model == "ResNet50":
+                X_train[n] = tf.keras.applications.resnet50.preprocess_input(img)
+            n = n + 1
+
+        X_train = np.array(X_train)
+        y_train = np.array(y_train)
 
     # Convert integer labels to one-hot encoded labels
     num_classes = 2
@@ -150,7 +179,8 @@ def resnet50():
 
     # Add custom classification layers on top of the base model
     x = base_model.output
-    x = Flatten()(x)
+    # x = Flatten()(x)
+    x = GlobalAveragePooling2D()(x)
     x = Dense(128, activation='relu', kernel_regularizer=l2(0.01))(x)
     predictions = Dense(2, activation='softmax')(x)
 
@@ -158,7 +188,8 @@ def resnet50():
     model = Model(inputs=base_model.input, outputs=predictions)
 
     # Freeze the layers of the base model except for the last layer
-    for layer in base_model.layers[:-1]:
+    # for layer in base_model.layers[:-1]:
+    for layer in base_model.layers:
         layer.trainable = False
 
     # Learning rate decay
@@ -173,7 +204,7 @@ def resnet50():
 
 
 def train_model(model, model_type, only_mass_cases=True, only_full_images=True, mode='tf', maintain_aspect_ratio=False,
-                dicom=False):
+                dicom=False, augmentation=False):
     """Train the model on the CBIS-DDSM dataset and evaluate it on the test dataset.
 
             Parameters:
@@ -188,6 +219,7 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
                     - tf: will apply the preprocessing function, that the tf.keras.applications package provides.
                 maintain_aspect_ratio (bool): Whether to maintain aspect ratio when resizing the image.
                 dicom (bool): Whether the images are in DICOM format (default: False).
+                augmentation (bool): Whether to apply data augmentation to enlarge the training set.
 
             Returns:
                 The trained ResNet50 model.
@@ -199,11 +231,23 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
                                                                                  only_full_images=only_full_images,
                                                                                  mode=mode,
                                                                                  maintain_aspect_ratio=maintain_aspect_ratio,
-                                                                                 dicom=dicom)
+                                                                                 dicom=dicom,
+                                                                                 augmentation=augmentation)
 
     # Stop training when the validation loss has stopped decreasing
     callback = EarlyStopping(monitor='val_loss', mode='auto', patience=3, verbose=1, start_from_epoch=5,
                              restore_best_weights=True)
+
+    train_datagen = ImageDataGenerator(rotation_range=40,
+                                       width_shift_range=0.2,
+                                       height_shift_range=0.2,
+                                       shear_range=0.2,
+                                       zoom_range=0.2,
+                                       horizontal_flip=True,
+                                       fill_mode='nearest')
+
+    # Apply augmentation to training data
+    # train_data_augmented = train_datagen.flow(X_train, y_train, batch_size=16)
 
     # Train the model
     print('----------Training the model----------')
@@ -221,6 +265,8 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
     val_loss = history.history['val_loss']
 
     plt.rcParams.update(bundles.icml2022(column='full', nrows=1, ncols=2, usetex=False))
+    plt.rcParams["font.family"] = "serif"
+    plt.rcParams["font.serif"] = ["Times New Roman"]
     fig, (ax1, ax2) = plt.subplots(1, 2)
     ax1.plot(acc, label='Training')
     ax1.plot(val_acc, label='Validation')
@@ -245,9 +291,23 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
 
 
 def main():
+    """
     model = resnet50()
-    trained_model = train_model(model, model_type='ResNet50', only_mass_cases=True, only_full_images=True, mode='tf',
-                                maintain_aspect_ratio=False, dicom=False)
+    trained_model = train_model(model, model_type='ResNet50', only_mass_cases=False, only_full_images=True, mode='tf',
+                                maintain_aspect_ratio=False, dicom=False, augmentation=False)
+    """
+
+    X_train, Y_train, X_val, Y_val, X_test, Y_test = train_test_validation_split(model="ResNet50",
+                                                                                 only_mass_cases=False,
+                                                                                 only_full_images=True,
+                                                                                 mode="tf",
+                                                                                 maintain_aspect_ratio=False,
+                                                                                 dicom=False,
+                                                                                 augmentation=False)
+    images_trainval = np.concatenate((X_train, X_val), axis=0)
+    labels_trainval = np.concatenate((Y_train, Y_val), axis=0)
+
+    validation.validation(images_trainval, labels_trainval, X_test, Y_test, mode="ResNet50", k=5)
 
 
 if __name__ == "__main__":

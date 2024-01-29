@@ -23,7 +23,7 @@ def dataaugmentation(images, labels, maintain_aspect_ratio=False):
         image = Image.fromarray(images[n])
         vertical_flip = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         horizontal_flip = image.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
-        vertical_horizontal_flip = vertical_flip.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+        vertical_horizontal_flip = horizontal_flip.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
 
         rotate_plus = image.rotate(30, fillcolor="black", expand=True)
         rotate_plus = image_preprocessing.resize_image(np.array(rotate_plus),

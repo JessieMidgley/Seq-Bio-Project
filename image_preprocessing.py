@@ -26,7 +26,6 @@ def remove_artefacts(img, shape=(224, 224)):
     rectangular_mask = skimage.img_as_ubyte(rectangular_mask)
     remove_borders = cv2.bitwise_and(rectangular_mask, img)
     # Morphological Opening
-    # TODO: Experiment with the threshold to obtain the best outcomes
     binary_mask = cv2.threshold(remove_borders, thresh=45, maxval=255, type=cv2.THRESH_BINARY)[1]
     kernel = np.ones((20, 20), np.uint8)
     opening = cv2.morphologyEx(binary_mask, op=cv2.MORPH_OPEN, kernel=kernel)
@@ -83,6 +82,7 @@ def resize_image(img, maintain_aspect_ratio=False):
         Returns:
                 A numpy array representing the resized image (grayscale, values in range [0, 255]).
     """
+
     if not maintain_aspect_ratio:
         return resize(img, output_shape=(224, 224), anti_aliasing=False, order=0)
     else:
@@ -123,7 +123,7 @@ def dicom_to_pixel_array(path):
     return data
 
 
-def preprocess_image(path, mode, model, maintain_aspect_ratio=False, dicom=False, aug=False):
+def preprocess_image(path, mode, model, maintain_aspect_ratio=False, dicom=False, augmentation=False):
     """Applies all pre-processing steps to the image.
 
             Parameters:
@@ -136,7 +136,7 @@ def preprocess_image(path, mode, model, maintain_aspect_ratio=False, dicom=False
                     - VGG16: If mode is 'tf', will apply tf.keras.applications.vgg16.preprocess_input().
                 maintain_aspect_ratio (bool): Whether to maintain aspect ratio when resizing the image.
                 dicom (bool): Whether the images are in DICOM format (default: False).
-                aug (bool): Whether image augmentation is used or not (default: False)
+                augmentation (bool): Whether to apply data augmentation to enlarge the training set.
 
             Returns:
                 A numpy array representing the processed image.
@@ -157,8 +157,6 @@ def preprocess_image(path, mode, model, maintain_aspect_ratio=False, dicom=False
         img_data = image_enhancement(img_data)
         # Since the ImageNet weights are trained on RGB images, convert the grayscale image to RGB
         img_data = cv2.cvtColor(img_data, cv2.COLOR_GRAY2RGB)
-        # TODO: maybe there is a problem here because the values are not zero-centered with respect to the ImageNet
-        #  dataset!
         # Each color channel is zero-centered (range[-1,1])
         # img_data = (img_data/127.5) - 1
         return img_data
@@ -166,14 +164,13 @@ def preprocess_image(path, mode, model, maintain_aspect_ratio=False, dicom=False
         # The tensorflow preprocessing functions expect a 3D or 4D np.array with 3 color channels!
         img_data = cv2.cvtColor(img_data, cv2.COLOR_GRAY2RGB)
         if model == 'ResNet50':
-            if aug:
+            if augmentation:
                 return img_data
             else:
                 return tf.keras.applications.resnet50.preprocess_input(img_data)
         else:
             # model == 'VGG16'
-            if aug:
+            if augmentation:
                 return img_data
             else:
                 return tf.keras.applications.vgg16.preprocess_input(img_data)
-            

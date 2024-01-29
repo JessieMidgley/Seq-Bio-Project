@@ -58,6 +58,7 @@
 \usepackage{algorithmicx}%
 \usepackage{algpseudocode}%
 \usepackage{listings}%
+\usepackage{subcaption}
 %\usepackage[
 %backend=bibtex,
 %style=alphabetic,
@@ -69,14 +70,14 @@
 
 %%%%%=============================================================================%%%%
 %%%%  Remarks: This template is provided to aid authors with the preparation
-%%%%  of original research articles intended for submission to journals published 
-%%%%  by Springer Nature. The guidance has been prepared in partnership with 
-%%%%  production teams to conform to Springer Nature technical requirements. 
-%%%%  Editorial and presentation requirements differ among journal portfolios and 
-%%%%  research disciplines. You may find sections in this template are irrelevant 
-%%%%  to your work and are empowered to omit any such section if allowed by the 
-%%%%  journal you intend to submit to. The submission guidelines and policies 
-%%%%  of the journal take precedence. A detailed User Manual is available in the 
+%%%%  of original research articles intended for submission to journals published
+%%%%  by Springer Nature. The guidance has been prepared in partnership with
+%%%%  production teams to conform to Springer Nature technical requirements.
+%%%%  Editorial and presentation requirements differ among journal portfolios and
+%%%%  research disciplines. You may find sections in this template are irrelevant
+%%%%  to your work and are empowered to omit any such section if allowed by the
+%%%%  journal you intend to submit to. The submission guidelines and policies
+%%%%  of the journal take precedence. A detailed User Manual is available in the
 %%%%  template package for technical guidance.
 %%%%%=============================================================================%%%%
 
@@ -87,7 +88,7 @@
 \newtheorem{theorem}{Theorem}%  meant for continuous numbers
 %%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
 %% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
-\newtheorem{proposition}[theorem]{Proposition}% 
+\newtheorem{proposition}[theorem]{Proposition}%
 %%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
 
 \theoremstyle{thmstyletwo}%
@@ -112,7 +113,7 @@
 %% Suffix	-> \sfx{IV}
 %% NatureName	-> \tanm{Poet Laureate} -> Title after name
 %% Degrees	-> \dgr{MSc, PhD}
-%% \author*[1,2]{\pfx{Dr} \fnm{Joergen W.} \spfx{van der} \sur{Ploeg} \sfx{IV} \tanm{Poet Laureate} 
+%% \author*[1,2]{\pfx{Dr} \fnm{Joergen W.} \spfx{van der} \sur{Ploeg} \sfx{IV} \tanm{Poet Laureate}
 %%                 \dgr{MSc, PhD}}\email{iauthor@gmail.com}
 %%=============================================================%%
 
@@ -138,11 +139,11 @@
 %%================================%%
 
 % \abstract{\textbf{Purpose:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
-% 
+%
 % \textbf{Methods:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
-% 
+%
 % \textbf{Results:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
-% 
+%
 % \textbf{Conclusion:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.}
 
 \keywords{keyword1, Keyword2, Keyword3, Keyword4}
@@ -155,7 +156,7 @@
 \newpage
 \section{Introduction}\label{Introduction}
 Breast cancer is a significant global health concern, impacting the lives of millions each year \cite{siegel2023cancer}. Early detection plays an important role in improving health outcomes and reducing mortality rates in cancer patients \cite{Mathew2018}. Currently, mammograms serve as a primary diagnostic tool in the identification of abnormalities in breast tissue \cite{Mathew2018}. However, the challenge of accurately interpreting these images and distinguishing between cancerous and non-cancerous abnormalities still remains \cite{elter2009}. The use of deep learning methods, particularly Convolutional Neural Networks (CNNs), have had a huge successes in medical image analysis \cite{Cai2020-hn}. Our project centers around the use of CNNs to classify mammograms into benign and malignant cases which, in theory, could aid healthcare professionals in making informed decisions about patient treatment plans. To train our CNNs we made use of the Curated Breast Imaging Subset of the Digital Database for Screening Mammography (CBIS-DDSM) dataset \cite{Lee2017-hi}. Since training a deep CNN requires a sufficiently large dataset in order to avoid overfitting, the issue of limited training samples is often addressed by transfer learning \cite{Kim2022-ge}. This technique uses a larger (often unrelated) database to train an initial model, which can then be fine-tuned on the dataset of interest \cite{Kim2022-ge}. Since large, publicly available medical imaging datasets are limited, we make use of the ImageNet dataset \cite{Deng2009-vj}. To develop our breast cancer classifier, we investigate the performance of two existing CNN architectures, namely VGG-16 \cite{simonyan2015deep} and ResNet-50 \cite{he2015deep}, that have already shown great success for ImageNet classifications, and transfer these pre-learned weights to classify mammogram images. By systematically comparing the performance of these models, we seek to identify the most effective architecture for distinguishing between benign and malignant cases. In addition, we investigate the effectiveness of various image pre-processing and augmentation methods in improving model performance.
- 
+
 \section{Materials and Methods}\label{Materials}
 \subsection{Dataset}\label{Dataset}
 The CBIS-DDSM dataset \cite{Lee2017-hi} is an updated version of the Digital Database for Screening Mammography (DDSM) \cite{Heath2007THEDD}, containing digitized mammograms  in standard DICOM format instead of the, now obsolete, lossless-JPEG format. The subset of 1644 mammography images from 1566 women that are included in the CBIS-DDSM have been selected and curated by a trained mammographer. The dataset is made up of 753 calcification cases and 891 mass cases, with a pathologic diagnosis for each image. We combine these cases and create a random train:test:validation split of 70:20:10.
@@ -172,8 +173,38 @@ The model consists of different types of layers. The early layers in the network
 This is followed by a dense layer flattening the output of the previous layers and applying a non-linear sigmoid to perform the actual classification. In total, VGG-16 has approximately 15 million trainable parameters \cite{Rahdika_2020}.
 
 \subsection{Hyperparameter}\label{Hyperparameter}
--What hyperparameter settings did you use?
 \subsubsection{Preprocessing Images}\label{Preprocessing}
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}{0.22\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{resized.png}
+    \caption{Resizing of images}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}{0.22\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{artefacts_removed.png}
+    \caption{Artefacts Removal}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}{0.22\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{enhanced.png}
+    \caption{Image Enhancement}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}{0.22\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{green_fire_blue.png}
+    \caption{Green Fire Blue Filter}
+  \end{subfigure}
+
+  \caption{Image preprocessing pipeline}
+  \label{fig:image_preprocessing}
+\end{figure}
+The main steps in image pre-processing are shown in Figure~\ref{fig:image_preprocessing}.
+
 \subsubsection{Fine Tuning}\label{finetuning}
 We experiment with re-training the last layer of the pre-trained model with the new images. This means that the original weights from the first to the penultimate layer are preserved or ``frozen", and the last layer is replaced with new weights in order to learn task-specific features. In addition, a final fully-connected layer with 128 units was added to the ResNet-50 model in order to increase the capacity of the model.
 

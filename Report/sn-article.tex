@@ -43,6 +43,7 @@
 %%<additional latex packages if required can be included here>
 
 \usepackage{graphicx}%
+
 \usepackage{multirow}%
 \usepackage{amsmath,amssymb,amsfonts}%
 \usepackage{amsthm}%
@@ -151,7 +152,7 @@
 %%\pacs[MSC Classification]{35A01, 65L10, 65L12, 65L20, 65L70}
 
 \maketitle
-
+\newpage
 \section{Introduction}\label{Introduction}
 Breast cancer is a significant global health concern, impacting the lives of millions each year \cite{siegel2023cancer}. Early detection plays an important role in improving health outcomes and reducing mortality rates in cancer patients \cite{Mathew2018}. Currently, mammograms serve as a primary diagnostic tool in the identification of abnormalities in breast tissue \cite{Mathew2018}. However, the challenge of accurately interpreting these images and distinguishing between cancerous and non-cancerous abnormalities still remains \cite{elter2009}. The use of deep learning methods, particularly Convolutional Neural Networks (CNNs), have had a huge successes in medical image analysis \cite{Cai2020-hn}. Our project centers around the use of CNNs to classify mammograms into benign and malignant cases which, in theory, could aid healthcare professionals in making informed decisions about patient treatment plans. To train our CNNs we made use of the Curated Breast Imaging Subset of the Digital Database for Screening Mammography (CBIS-DDSM) dataset \cite{Lee2017-hi}. Since training a deep CNN requires a sufficiently large dataset in order to avoid overfitting, the issue of limited training samples is often addressed by transfer learning \cite{Kim2022-ge}. This technique uses a larger (often unrelated) database to train an initial model, which can then be fine-tuned on the dataset of interest \cite{Kim2022-ge}. Since large, publicly available medical imaging datasets are limited, we make use of the ImageNet dataset \cite{Deng2009-vj}. To develop our breast cancer classifier, we investigate the performance of two existing CNN architectures, namely VGG-16 \cite{simonyan2015deep} and ResNet-50 \cite{he2015deep}, that have already shown great success for ImageNet classifications, and transfer these pre-learned weights to classify mammogram images. By systematically comparing the performance of these models, we seek to identify the most effective architecture for distinguishing between benign and malignant cases. In addition, we investigate the effectiveness of various image pre-processing and augmentation methods in improving model performance.
  
@@ -160,6 +161,7 @@ Breast cancer is a significant global health concern, impacting the lives of mil
 The CBIS-DDSM dataset \cite{Lee2017-hi} is an updated version of the Digital Database for Screening Mammography (DDSM) \cite{Heath2007THEDD}, containing digitized mammograms  in standard DICOM format instead of the, now obsolete, lossless-JPEG format. The subset of 1644 mammography images from 1566 women that are included in the CBIS-DDSM have been selected and curated by a trained mammographer. The dataset is made up of 753 calcification cases and 891 mass cases, with a pathologic diagnosis for each image. We combine these cases and create a random train:test:validation split of 70:20:10.
 
 \subsection{Models}\label{Models}
+Convolutional Neural Networks got increasing attention in recent years, primarily for classification of image data. There exist many established pre-trained CNNs online that can be applied to the data. Based on the results of the BreastNet18 model of Montaha et al., VGG-16 and ResNet50 architecture are used as the base models in this report \cite{Montaha_2021}.
 \subsubsection{ResNet-50}\label{ResNet}
 ResNet-50 is a variant of Residual Network (ResNet) architecture, which makes use of skip connections designed to address the vanishing gradient problem. The vanishing gradient problem typically arises during the training of deep neural networks, when the gradients of the loss function become continuously smaller as they are backpropagated through the network. Skip connections allow the gradients  to flow directly though the network, thereby mitigating the vanishing gradient problem. The ResNet-50 architecture consists of 50 layers of weights and several residual learning blocks with varying number of convolutional layers within each block. Each convolutional layer uses Batch normalization as a regularization method. In total, ResNet-50 is made up of a total of  48 convolutional layers, along with 2 pooling layers, producing a grand total of 23 million trainable parameters. The network takes images as input with a dimension of 224 x 224 pixels, and uses softmax in the final layer for the classification of input images \cite{he2015deep}.
 
@@ -167,7 +169,7 @@ ResNet-50 is a variant of Residual Network (ResNet) architecture, which makes us
 VGG-16 is a Convolutional Neural Network architecture proposed by Simonyan and Zisserman in 2014, containing 16 layers \cite{Alzubaidi_2021}.
 The VGG-16 architecture takes RGB images of a size of 224x224 pixels.\\
 The model consists of different types of layers. The early layers in the network comprise 13 convolution layers containing 5 max-pooling layers.
-This is followed by 3 dense layers flattening the output of the previous layers and applying a non-linear sigmoid to perform the actual classification. In total, VGG-16 has approximately 15 million trainable parameters \cite{Rahdika_2020}.
+This is followed by a dense layer flattening the output of the previous layers and applying a non-linear sigmoid to perform the actual classification. In total, VGG-16 has approximately 15 million trainable parameters \cite{Rahdika_2020}.
 
 \subsection{Hyperparameter}\label{Hyperparameter}
 -What hyperparameter settings did you use?
@@ -211,12 +213,13 @@ To evaluate the best VGG16 and ResNet50 model we trained them on 5 different tra
 
 
 \subsection{VGG-16}\label{VGG-16_Results}
-Table \ref{tab1} displays the performance of the model with different hyperparameters. The performance is measured based on two values: the accuracy and the area under the curve (AUC). The first one gives an inside on the correctly predicted classes among all the predictions that have been performed whereas the AUC is based on ... \\
+Table \ref{tab1} displays the performance of the model with different hyperparameters. The performance is measured based on two values: the accuracy and the area under the curve (AUC).
 The training of the respective models is performed on a training dataset. Validation is performed on a separate set of images, not seen by the model before.\\
 Applying a Global Average Pooling layer instead of a Fatten layer gives rise to worse accuracy and AUC, so does the model, including the self-written preprocessing.\\
 The best model is written in bold in the table. The model uses a learning rate of 0.00001, the Adam optimizer, and a flatten layer. The model has a validation accuracy of 72.3\% and an AUC of 80.1\%.\\
-Figure \ref{VGG-16_best} shows the training and test accuracy and loss per epoch of the model. Training, as well as validation accuracy, increased whereas the loss decreased. Figure \ref{final-roc} displays the ROC curves for the cross-validation applied to a test set using different train/validation splits. Models 1 and 2 have the highest area under the curve and therefore give the best performance to classify new images. The model achieves a mean accuracy on all splits of 68.6\% and a mean AUC of 73.7\%.
+Figure \ref{VGG-16_best} shows the training and test accuracy and loss per epoch of the model. Training, as well as validation accuracy, increased whereas the loss decreased. Figure \ref{final-roc} displays the ROC curves for the validation applied to a test set using different train/validation splits. All the models result in a similar AUC for the different splits. The model with best performance achieves a mean accuracy on all splits of 68.6\% and a mean AUC of 73.7\%.
 
+\newpage
 
 \def\btc{\begin{tabular}{c}}
 \def\etc{\end{tabular}}
@@ -227,8 +230,8 @@ Figure \ref{VGG-16_best} shows the training and test accuracy and loss per epoch
 \toprule
   Prepro & \btc Last Layer\\Trainable \etc  & \btc Adam/ \\ Nadam \etc & \btc Flatten/\\GAP\footnotemark[1]\etc& \btc Learning\\ rate \etc & \btc Data\\ Augm.\footnotemark[2] \etc & \btc H/W \\ Ratio\footnotemark[3] \etc & Acc\footnotemark[4]  & AUC\footnotemark[5]  \\
 \midrule
+built-in   & no  & Adam & Flatten  & 0.0001 & no & no & 0.6933  & 0.7353  \\
 built-in   & yes  & Adam & Flatten  & 0.0001 & no & no & 0.6656  & 0.7487    \\
-built-in   & no  & Adam & Flatten  & 0.0001 & no & no & 0.6933  & 0.7353     \\
 self-written   & no  & Adam & Flatten  & 0.0001 & no & no &   0.5920 & 0.6708\\
 built-in   & no  & Nadam & Flatten  & 0.0001 & no & no & 0.6656  & 0.7337   \\
 \textbf{built-in}   & \textbf{no}  & \textbf{Adam} & \textbf{Flatten}  & \textbf{0.00001} & \textbf{no} & \textbf{no} & \textbf{0.7270}  & \textbf{0.8016} \\
@@ -247,18 +250,18 @@ built-in   & no  & Adam & Flatten & 0.00001 & no & yes & 0.7117  & 0.7286  \\
 \footnotetext[4]{Accuracy on validation set}
 \footnotetext[5]{AUC on validation set}
 \end{table}
-
 \begin{figure}[h]%
 \centering
-\includegraphics[width=0.9\textwidth]{VGG16_BaseModel-Adam_results_0.00001.pdf}
+\includegraphics[width=1.0\textwidth]{VGG16_BaseModel-Adam_results_0.00001.pdf}
 \caption{Training and validation accuracy and loss of model with best performance }\label{VGG-16_best}
 \end{figure}
-
 \begin{figure}[h]%
 \centering
 \includegraphics[width=0.6\textwidth]{final_roc.pdf}
 \caption{ROC curve after cross-validation of model with best performance using different training/validation splits.}\label{final-roc}
 \end{figure}
+\newpage
+
 
 \subsection{ResNet-50}\label{ResNet_Results}
 -- write ResNet results

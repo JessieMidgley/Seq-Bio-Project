@@ -26,7 +26,10 @@ from tensorflow.keras.callbacks import EarlyStopping
 from statistics import *
 import BreastCancerClassification_VGG16
 
-"""validation of model
+
+def validation(images_trainval, labels_trainval, images_test, labels_test, mode, k):
+    
+    """validation of model
 
        Parameters:
            images (np.array): Array of pixel array of images.
@@ -38,11 +41,8 @@ import BreastCancerClassification_VGG16
        Returns:
            A numpy array with the mean auc and accuracy of the model in the different runs with random train_test_splits
 
-"""
-def validation(images_trainval, labels_trainval, images_test, labels_test, mode, k):
-    
-    #images_trainval = images_trainval[0:100]
-    #labels_trainval = labels_trainval[0:100]
+    """
+
 
     results_auc = []
     results_acc = []

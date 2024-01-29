@@ -299,7 +299,7 @@ def main():
     images_trainval = np.concatenate((X_train,X_val),axis=0)
     labels_trainval = np.concatenate((Y_train,Y_val),axis=0)
     
-    validation_cnn.validation(images_trainval, labels_trainval, X_test, Y_test,"VGG16",5)
+    validation.validation(images_trainval, labels_trainval, X_test, Y_test,"VGG16",5)
     
 
 if __name__ == "__main__":

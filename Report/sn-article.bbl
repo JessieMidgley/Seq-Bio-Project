@@ -1,0 +1,288 @@
+%% BioMed_Central_Bib_Style_v1.01
+
+\begin{thebibliography}{18}
+% BibTex style file: bmc-mathphys.bst (version 2.1), 2014-07-24
+\ifx \bisbn   \undefined \def \bisbn  #1{ISBN #1}\fi
+\ifx \binits  \undefined \def \binits#1{#1}\fi
+\ifx \bauthor  \undefined \def \bauthor#1{#1}\fi
+\ifx \batitle  \undefined \def \batitle#1{#1}\fi
+\ifx \bjtitle  \undefined \def \bjtitle#1{#1}\fi
+\ifx \bvolume  \undefined \def \bvolume#1{\textbf{#1}}\fi
+\ifx \byear  \undefined \def \byear#1{#1}\fi
+\ifx \bissue  \undefined \def \bissue#1{#1}\fi
+\ifx \bfpage  \undefined \def \bfpage#1{#1}\fi
+\ifx \blpage  \undefined \def \blpage #1{#1}\fi
+\ifx \burl  \undefined \def \burl#1{\textsf{#1}}\fi
+\ifx \doiurl  \undefined \def \doiurl#1{\url{https://doi.org/#1}}\fi
+\ifx \betal  \undefined \def \betal{\textit{et al.}}\fi
+\ifx \binstitute  \undefined \def \binstitute#1{#1}\fi
+\ifx \binstitutionaled  \undefined \def \binstitutionaled#1{#1}\fi
+\ifx \bctitle  \undefined \def \bctitle#1{#1}\fi
+\ifx \beditor  \undefined \def \beditor#1{#1}\fi
+\ifx \bpublisher  \undefined \def \bpublisher#1{#1}\fi
+\ifx \bbtitle  \undefined \def \bbtitle#1{#1}\fi
+\ifx \bedition  \undefined \def \bedition#1{#1}\fi
+\ifx \bseriesno  \undefined \def \bseriesno#1{#1}\fi
+\ifx \blocation  \undefined \def \blocation#1{#1}\fi
+\ifx \bsertitle  \undefined \def \bsertitle#1{#1}\fi
+\ifx \bsnm \undefined \def \bsnm#1{#1}\fi
+\ifx \bsuffix \undefined \def \bsuffix#1{#1}\fi
+\ifx \bparticle \undefined \def \bparticle#1{#1}\fi
+\ifx \barticle \undefined \def \barticle#1{#1}\fi
+\bibcommenthead
+\ifx \bconfdate \undefined \def \bconfdate #1{#1}\fi
+\ifx \botherref \undefined \def \botherref #1{#1}\fi
+\ifx \url \undefined \def \url#1{\textsf{#1}}\fi
+\ifx \bchapter \undefined \def \bchapter#1{#1}\fi
+\ifx \bbook \undefined \def \bbook#1{#1}\fi
+\ifx \bcomment \undefined \def \bcomment#1{#1}\fi
+\ifx \oauthor \undefined \def \oauthor#1{#1}\fi
+\ifx \citeauthoryear \undefined \def \citeauthoryear#1{#1}\fi
+\ifx \endbibitem  \undefined \def \endbibitem {}\fi
+\ifx \bconflocation  \undefined \def \bconflocation#1{#1}\fi
+\ifx \arxivurl  \undefined \def \arxivurl#1{\textsf{#1}}\fi
+\csname PreBibitemsHook\endcsname
+
+%%% 1
+\bibitem[\protect\citeauthoryear{Siegel et~al.}{}]{siegel2023cancer}
+\begin{botherref}
+\oauthor{\bsnm{Siegel}, \binits{R.L.}},
+\oauthor{\bsnm{Miller}, \binits{K.D.}},
+\oauthor{\bsnm{Wagle}, \binits{N.S.}},
+\oauthor{\bsnm{Jemal}, \binits{A.}}:
+Cancer statistics, 2023.
+CA: A Cancer Journal for Clinicians
+\textbf{73}(1),
+17--48
+\doiurl{10.3322/caac.21763}
+\end{botherref}
+\endbibitem
+
+%%% 2
+\bibitem[\protect\citeauthoryear{Mathew and Sibbering}{2018}]{Mathew2018}
+\begin{bbook}
+\bauthor{\bsnm{Mathew}, \binits{J.}},
+\bauthor{\bsnm{Sibbering}, \binits{M.}}:
+In: \beditor{\bsnm{Wyld}, \binits{L.}},
+\beditor{\bsnm{Markopoulos}, \binits{C.}},
+\beditor{\bsnm{Leidenius}, \binits{M.}},
+\beditor{\bsnm{Senkus-Konefka}, \binits{E.}} (eds.)
+\bbtitle{Breast Cancer Screening},
+pp. \bfpage{147}--\blpage{156}.
+\bpublisher{Springer},
+\blocation{Cham}
+(\byear{2018})
+\end{bbook}
+\endbibitem
+
+%%% 3
+\bibitem[\protect\citeauthoryear{Elter and Horsch}{2009}]{elter2009}
+\begin{barticle}
+\bauthor{\bsnm{Elter}, \binits{M.}},
+\bauthor{\bsnm{Horsch}, \binits{A.}}:
+\batitle{Cadx of mammographic masses and clustered microcalcifications: A
+  review}.
+\bjtitle{Medical Physics}
+\bvolume{36}(\bissue{6Part1}),
+\bfpage{2052}--\blpage{2068}
+(\byear{2009})
+\doiurl{10.1118/1.3121511}
+\end{barticle}
+\endbibitem
+
+%%% 4
+\bibitem[\protect\citeauthoryear{Cai et~al.}{2020}]{Cai2020-hn}
+\begin{barticle}
+\bauthor{\bsnm{Cai}, \binits{L.}},
+\bauthor{\bsnm{Gao}, \binits{J.}},
+\bauthor{\bsnm{Zhao}, \binits{D.}}:
+\batitle{A review of the application of deep learning in medical image
+  classification and segmentation}.
+\bjtitle{Ann. Transl. Med.}
+\bvolume{8}(\bissue{11}),
+\bfpage{713}
+(\byear{2020})
+\end{barticle}
+\endbibitem
+
+%%% 5
+\bibitem[\protect\citeauthoryear{Lee et~al.}{2017}]{Lee2017-hi}
+\begin{barticle}
+\bauthor{\bsnm{Lee}, \binits{R.S.}},
+\bauthor{\bsnm{Gimenez}, \binits{F.}},
+\bauthor{\bsnm{Hoogi}, \binits{A.}},
+\bauthor{\bsnm{Miyake}, \binits{K.K.}},
+\bauthor{\bsnm{Gorovoy}, \binits{M.}},
+\bauthor{\bsnm{Rubin}, \binits{D.L.}}:
+\batitle{A curated mammography data set for use in computer-aided detection and
+  diagnosis research}.
+\bjtitle{Sci. Data}
+\bvolume{4}(\bissue{1}),
+\bfpage{170177}
+(\byear{2017})
+\end{barticle}
+\endbibitem
+
+%%% 6
+\bibitem[\protect\citeauthoryear{Kim et~al.}{2022}]{Kim2022-ge}
+\begin{barticle}
+\bauthor{\bsnm{Kim}, \binits{H.E.}},
+\bauthor{\bsnm{Cosa-Linan}, \binits{A.}},
+\bauthor{\bsnm{Santhanam}, \binits{N.}},
+\bauthor{\bsnm{Jannesari}, \binits{M.}},
+\bauthor{\bsnm{Maros}, \binits{M.E.}},
+\bauthor{\bsnm{Ganslandt}, \binits{T.}}:
+\batitle{Transfer learning for medical image classification: a literature
+  review}.
+\bjtitle{BMC Med. Imaging}
+\bvolume{22}(\bissue{1}),
+\bfpage{69}
+(\byear{2022})
+\end{barticle}
+\endbibitem
+
+%%% 7
+\bibitem[\protect\citeauthoryear{Deng et~al.}{2009}]{Deng2009-vj}
+\begin{bchapter}
+\bauthor{\bsnm{Deng}, \binits{J.}},
+\bauthor{\bsnm{Dong}, \binits{W.}},
+\bauthor{\bsnm{Socher}, \binits{R.}},
+\bauthor{\bsnm{Li}, \binits{L.-J.}},
+\bauthor{\bsnm{Li}, \binits{K.}},
+\bauthor{\bsnm{Fei-Fei}, \binits{L.}}:
+\bctitle{{ImageNet}: A large-scale hierarchical image database}.
+In: \bbtitle{2009 {IEEE} Conference on Computer Vision and Pattern
+  Recognition}.
+\bpublisher{IEEE}, \blocation{???}
+(\byear{2009})
+\end{bchapter}
+\endbibitem
+
+%%% 8
+\bibitem[\protect\citeauthoryear{Simonyan and
+  Zisserman}{2015}]{simonyan2015deep}
+\begin{botherref}
+\oauthor{\bsnm{Simonyan}, \binits{K.}},
+\oauthor{\bsnm{Zisserman}, \binits{A.}}:
+Very Deep Convolutional Networks for Large-Scale Image Recognition
+(2015)
+\end{botherref}
+\endbibitem
+
+%%% 9
+\bibitem[\protect\citeauthoryear{He et~al.}{2015}]{he2015deep}
+\begin{botherref}
+\oauthor{\bsnm{He}, \binits{K.}},
+\oauthor{\bsnm{Zhang}, \binits{X.}},
+\oauthor{\bsnm{Ren}, \binits{S.}},
+\oauthor{\bsnm{Sun}, \binits{J.}}:
+Deep Residual Learning for Image Recognition
+(2015)
+\end{botherref}
+\endbibitem
+
+%%% 10
+\bibitem[\protect\citeauthoryear{Heath et~al.}{2007}]{Heath2007THEDD}
+\begin{bchapter}
+\bauthor{\bsnm{Heath}, \binits{M.D.}},
+\bauthor{\bsnm{Bowyer}, \binits{K.}},
+\bauthor{\bsnm{Kopans}, \binits{D.B.}},
+\bauthor{\bsnm{Moore}, \binits{R.H.}}:
+\bctitle{The digital database for screening mammography}.
+(\byear{2007}).
+\burl{https://api.semanticscholar.org/CorpusID:68362967}
+\end{bchapter}
+\endbibitem
+
+%%% 11
+\bibitem[\protect\citeauthoryear{Kingma and Ba}{2017}]{kingma2017adam}
+\begin{botherref}
+\oauthor{\bsnm{Kingma}, \binits{D.P.}},
+\oauthor{\bsnm{Ba}, \binits{J.}}:
+Adam: A Method for Stochastic Optimization
+(2017)
+\end{botherref}
+\endbibitem
+
+%%% 12
+\bibitem[\protect\citeauthoryear{Dozat}{}]{dozat.2016}
+\begin{botherref}
+\oauthor{\bsnm{Dozat}, \binits{T.}}:
+Incorporating {Nesterov Momentum into Adam}.
+In: Proceedings of the 4th International Conference on Learning
+  Representations,
+pp. 1--4
+\end{botherref}
+\endbibitem
+
+%%% 13
+\bibitem[\protect\citeauthoryear{Brownlee}{2020}]{Brownlee_2020}
+\begin{botherref}
+\oauthor{\bsnm{Brownlee}, \binits{J.}}:
+Understand the impact of learning rate on neural network performance
+(2020).
+\url{https://machinelearningmastery.com/understand-the-dynamics-of-learning-rate-on-deep-learning-neural-networks/}
+\end{botherref}
+\endbibitem
+
+%%% 14
+\bibitem[\protect\citeauthoryear{Li et~al.}{2020}]{Yuanyuan_2020}
+\begin{bchapter}
+\bauthor{\bsnm{Li}, \binits{Y.}},
+\bauthor{\bsnm{Zhang}, \binits{Q.}},
+\bauthor{\bsnm{Won}, \binits{D.}},
+\bauthor{\bsnm{Lu}, \binits{F.}},
+\bauthor{\bsnm{Yoon}, \binits{S.W.}}:
+\bctitle{Learning rate optimization in convolutional neural networks for
+  medical images classification}.
+(\byear{2020})
+\end{bchapter}
+\endbibitem
+
+%%% 15
+\bibitem[\protect\citeauthoryear{}{}]{IDG}
+\begin{botherref}
+tf.keras.preprocessing.image.ImageDataGenerator.
+\url{https://www.tensorflow.org/api_docs/python/tf/keras/preprocessing/image/ImageDataGenerator}.
+Accessed: 2024-01-23
+\end{botherref}
+\endbibitem
+
+%%% 16
+\bibitem[\protect\citeauthoryear{Montaha et~al.}{2021}]{Montaha2021}
+\begin{botherref}
+\oauthor{\bsnm{Montaha}, \binits{S.}},
+\oauthor{\bsnm{Azam}, \binits{S.}},
+\oauthor{\bsnm{Rafid}, \binits{A.K.M.R.H.}},
+\oauthor{\bsnm{Ghosh}, \binits{P.}},
+\oauthor{\bsnm{Hasan}, \binits{M.Z.}},
+\oauthor{\bsnm{Jonkman}, \binits{M.}},
+\oauthor{\bsnm{De~Boer}, \binits{F.}}:
+Breastnet18: A high accuracy fine-tuned vgg16 model evaluated using ablation
+  study for diagnosing breast cancer from enhanced mammography images.
+Biology
+\textbf{10}(12)
+(2021)
+\doiurl{10.3390/biology10121347. PMID: 34943262}
+\end{botherref}
+\endbibitem
+
+%%% 17
+\bibitem[\protect\citeauthoryear{}{}]{resize}
+\begin{botherref}
+skimage.transform.
+\url{https://scikit-image.org/docs/stable/api/skimage.transform.html#skimage.transform.resize}.
+Accessed: 2024-01-23
+\end{botherref}
+\endbibitem
+
+%%% 18
+\bibitem[\protect\citeauthoryear{}{}]{TTS}
+\begin{botherref}
+sklearn.model\_selection.train\_test\_split.
+\url{https://scikit-learn.org/stable/modules/generated/sklearn.model\_selection.train\_test\_split.html}.
+Accessed: 2024-01-25
+\end{botherref}
+\endbibitem
+
+\end{thebibliography}

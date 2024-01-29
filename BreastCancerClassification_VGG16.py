@@ -23,7 +23,7 @@ from keras.regularizers import l2
 import pandas as pd
 import image_preprocessing
 from tueplots import bundles
-import validation_cnn
+import validation
 import dataaugmentation
 
 
@@ -249,7 +249,8 @@ def train_model(model, model_type, only_mass_cases=True, only_full_images=True, 
     print('----------Training the model----------')
     history = model.fit(X_train,
                         y_train,
-                        epochs=1,
+                        epochs=50,
+                        batch_size=1,
                         validation_data=(X_val, y_val),
                         callbacks=[callback],
                         verbose=2)
@@ -298,7 +299,7 @@ def main():
     images_trainval = np.concatenate((X_train,X_val),axis=0)
     labels_trainval = np.concatenate((Y_train,Y_val),axis=0)
     
-    validation_cnn.validation(images_trainval, labels_trainval, X_test, Y_test,"VGG16",3)
+    validation_cnn.validation(images_trainval, labels_trainval, X_test, Y_test,"VGG16",5)
     
 
 if __name__ == "__main__":

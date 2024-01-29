@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
 import cv2
 import pydicom
 from PIL import Image
@@ -46,7 +48,7 @@ def image_enhancement(img):
                 img (np.array): Pixel array of the image (grayscale, values in range [0, 255]).
 
             Returns:
-                A numpy array representing the processed image (grayscale, values in range [0, 255]).
+                A numpy array representing the processed image (RGB, values in range [0, 255]).
     """
 
     # Scale values to [0,1]
@@ -62,13 +64,14 @@ def image_enhancement(img):
     img = clahe.apply(img)
     img = clahe.apply(img)
     # Green Fire Blue
-    # cmap = Colormap('imagej:GreenFireBlue').to_mpl()
-    # sm = plt.cm.ScalarMappable(cmap=cmap)
-    # color_range = sm.to_rgba(np.linspace(0, 1, 256), bytes=True)[:, 2::-1]
-    # color_range = color_range.reshape(256, 1, 3)
-    # img = cv2.applyColorMap(img, color_range)
+    cmap = Colormap('imagej:GreenFireBlue').to_mpl()
+    norm = Normalize(vmin=img.min(), vmax=img.max())
+    mapped_image = cmap(norm(img))
+    mapped_image_scaled = (mapped_image * 255).astype(np.uint8)
+    # Ensure the image has only 3 channels (discard alpha channel)
+    mapped_image_rgb = mapped_image_scaled[:, :, :3]
 
-    return img
+    return mapped_image_rgb
 
 
 def resize_image(img, maintain_aspect_ratio=False):
@@ -139,7 +142,7 @@ def preprocess_image(path, mode, model, maintain_aspect_ratio=False, dicom=False
                 augmentation (bool): Whether to apply data augmentation to enlarge the training set.
 
             Returns:
-                A numpy array representing the processed image.
+                A numpy array representing the processed image (RGB, 224px x 224px).
     """
 
     if dicom:
@@ -156,7 +159,7 @@ def preprocess_image(path, mode, model, maintain_aspect_ratio=False, dicom=False
             img_data = remove_artefacts(img_data)
         img_data = image_enhancement(img_data)
         # Since the ImageNet weights are trained on RGB images, convert the grayscale image to RGB
-        img_data = cv2.cvtColor(img_data, cv2.COLOR_GRAY2RGB)
+        # img_data = cv2.cvtColor(img_data, cv2.COLOR_GRAY2RGB)
         # Each color channel is zero-centered (range[-1,1])
         # img_data = (img_data/127.5) - 1
         return img_data

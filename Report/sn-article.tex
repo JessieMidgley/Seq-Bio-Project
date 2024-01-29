@@ -202,49 +202,12 @@ We also test the performance on an augmentation method we wrote ourselves to inc
 \subsubsection{Keeping Height/Width Ratio}\label{HeightWidth}
 Since the images in the dataset don't have a height and width of 224 pixels and the models we use have these input dimensions we need to resize the images before we can use them. The build-in function resize from scikit-image doesn't keep the aspect ratio of the pictures it processes~\cite{resize}. Since this can distort important parts of the image we wrote a function that keeps the height/width ratio unchanged while resizing the images. For this we resize the image to the the maximum size in which it still fits in the dimensions (224px,224px) and in which the ratio is kept and fill the parts missing to get a image with the dimensions (224px,224px) black. We compare the performance of the models on images of these two resizing methods.\\
 
-\subsection{Model Evaluation}
+
 
 
 \section{Results}\label{Results}
-\subsection{VGG-16}\label{VGG-16_Results}
-\subsection{ResNet-50}\label{ResNet_Results}
 \subsection{Validation on Best Model}\label{CV_Results}
 To evaluate the best VGG16 and ResNet50 model we trained them on 5 different train validation splits and use our pre-defined test set to evaluate the trained model. We generate the different splits by applying the train\_test\_split function from scikit-learn with five times and set the random\_state parameter to None~\cite{TTS}. This way for each run a different values is being used. In the end we plot the ROC-curve for each of these runs and compute the mean test accuracy and the mean test auc.\\
-
-\section{Results}\label{Results}
-
-\subsection{ResNet-50}\label{ResNet_Results}
-
-
-\def\btc{\begin{tabular}{c}}
-\def\etc{\end{tabular}}
-\begin{table}[h]
-\setlength\tabcolsep{4pt}
-\caption{Results of ResNet-50 hyperparameter tuning}\label{tab1}%
-\begin{tabular}{@{}lllllllll@{}}
-\toprule
-  Prepro & \btc Last Layer\\Trainable \etc  & \btc Adam/ \\ Nadam \etc & \btc Flatten/\\GAP\footnotemark[1]\etc& \btc Learning\\ rate \etc & \btc Data\\ Augm.\footnotemark[2] \etc & \btc H/W \\ Ratio\footnotemark[3] \etc & Acc\footnotemark[4]  & AUC\footnotemark[5]  \\
-\midrule
-built-in   & yes  & Nadam & Flatten  & 0.0001 & no & no & 0.7209  & 0.8036    \\
-self-written   & yes  & Nadam & Flatten  & 0.0001 & no & no & 0.6564  & 0.7217 \\
-built-in   & no  & Nadam & Flatten  & 0.0001 & no & no & 0.7270  & 0.8234     \\
-\textbf{built-in} & \textbf{no}  & \textbf{Nadam}& \textbf{GAP}  & \textbf{0.0001} & \textbf{no} & \textbf{no} & \textbf{0.7515} & \textbf{0.8269}    \\
-built-in  & no  & Nadam & GAP  & 0.001 & no & no &  0.7086  & 0.7959   \\
-built-in   & no  & Nadam & GAP & 0.00001 & no & no & 0.6871  & 0.7617  \\
-
-\botrule
-\end{tabular}
-
-\footnotetext[1]{Global Average Pooling}
-\footnotetext[2]{using built-in Image Data Generator}
-\footnotetext[3]{Keeping height/width ratio}
-\footnotetext[4]{Accuracy on validation set}
-\footnotetext[5]{AUC on validation set}
-\end{table}
-
-
-
-
 
 \subsection{VGG-16}\label{VGG-16_Results}
 Table \ref{tab1} displays the performance of the model with different hyperparameters. The performance is measured based on two values: the accuracy and the area under the curve (AUC). The first one gives an inside on the correctly predicted classes among all the predictions that have been performed whereas the AUC is based on ... \\
@@ -284,7 +247,6 @@ built-in   & no  & Adam & Flatten & 0.00001 & no & yes & 0.7117  & 0.7286  \\
 \footnotetext[5]{AUC on validation set}
 \end{table}
 
-
 \begin{figure}[h]%
 \centering
 \includegraphics[width=0.9\textwidth]{VGG16_BaseModel-Adam_results_0.00001.pdf}
@@ -296,6 +258,40 @@ built-in   & no  & Adam & Flatten & 0.00001 & no & yes & 0.7117  & 0.7286  \\
 \includegraphics[width=0.6\textwidth]{final_roc.pdf}
 \caption{ROC curve after cross-validation of model with best performance using different training/validation splits.}\label{final-roc}
 \end{figure}
+
+\subsection{ResNet-50}\label{ResNet_Results}
+-- write ResNet results
+
+\def\btc{\begin{tabular}{c}}
+\def\etc{\end{tabular}}
+\begin{table}[h]
+\setlength\tabcolsep{4pt}
+\caption{Results of ResNet-50 hyperparameter tuning}\label{tab1}%
+\begin{tabular}{@{}lllllllll@{}}
+\toprule
+  Prepro & \btc Last Layer\\Trainable \etc  & \btc Adam/ \\ Nadam \etc & \btc Flatten/\\GAP\footnotemark[1]\etc& \btc Learning\\ rate \etc & \btc Data\\ Augm.\footnotemark[2] \etc & \btc H/W \\ Ratio\footnotemark[3] \etc & Acc\footnotemark[4]  & AUC\footnotemark[5]  \\
+\midrule
+built-in   & yes  & Nadam & Flatten  & 0.0001 & no & no & 0.7209  & 0.8036    \\
+self-written   & yes  & Nadam & Flatten  & 0.0001 & no & no & 0.6564  & 0.7217 \\
+built-in   & no  & Nadam & Flatten  & 0.0001 & no & no & 0.7270  & 0.8234     \\
+\textbf{built-in} & \textbf{no}  & \textbf{Nadam}& \textbf{GAP}  & \textbf{0.0001} & \textbf{no} & \textbf{no} & \textbf{0.7515} & \textbf{0.8269}    \\
+built-in  & no  & Nadam & GAP  & 0.001 & no & no &  0.7086  & 0.7959   \\
+built-in   & no  & Nadam & GAP & 0.00001 & no & no & 0.6871  & 0.7617  \\
+
+\botrule
+\end{tabular}
+
+\footnotetext[1]{Global Average Pooling}
+\footnotetext[2]{using built-in Image Data Generator}
+\footnotetext[3]{Keeping height/width ratio}
+\footnotetext[4]{Accuracy on validation set}
+\footnotetext[5]{AUC on validation set}
+\end{table}
+
+
+
+
+
 
 \section{Discussion}\label{Discussion}
 what you did in your project

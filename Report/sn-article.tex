@@ -302,10 +302,9 @@ built-in   & no  & Adam & GAP & 0.0001 & no & no & 0.7515  &  0.8128 \\
 
 
 \section{Discussion}\label{Discussion}
-what you did in your project
-how you did it
-what the results mean?
-interpret your results and draw conclusion
+In the project, breast cancer images are preprocessed and data augmentation is applied to get more images for training. For data augmentation, the DataGenerator from tensorflow as well as a self-written augmentation are used.\\
+The data, is split into training, validation, and test sets. The two models, VGG-16 and ResNet50 are then trained on the training set, achieving accuracy and AUC of over 90\% in both models. The best accuracy and AUC of both architectures use built-in preprocessing  and no data augmentation. The ResNet50 model with a Nadam optimizer, a global average pooling layer, and a learning rate of 0.0001 achieves the best accuracy and AUC among both models.
+The results show that CNNs can support clinicians in classifying mammographic images. However, further improvements are necessary for better predictions. As we are dealing with patients and health data correct and trustful classification is really important. 
 
 \section{Conclusion}\label{conclusion}
 In the following report, two existing CNN architectures, namely VGG-16 and ResNet-50 are used to classify mammogram images into benign and malignant.\\

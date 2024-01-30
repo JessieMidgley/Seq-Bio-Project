@@ -161,7 +161,7 @@ Breast cancer is a significant global health concern, impacting the lives of mil
 \label{Materials}
 \subsection{Dataset}
 \label{Dataset}
-The CBIS-DDSM dataset \cite{Lee2017-hi} is an updated version of the Digital Database for Screening Mammography (DDSM) \cite{Heath2007THEDD}, containing digitized mammograms  in standard DICOM format instead of the, now obsolete, lossless-JPEG format. The subset of 1644 mammography images from 1566 women that are included in the CBIS-DDSM have been selected and curated by a trained mammographer. The dataset is made up of 753 calcification cases and 891 mass cases, with a pathologic diagnosis for each image. We combine these cases and create a random train:test:validation split of 70:20:10.
+The CBIS-DDSM dataset \cite{Lee2017-hi} is an updated version of the Digital Database for Screening Mammography (DDSM) \cite{Heath2007THEDD}, containing digitized mammograms  in standard DICOM format instead of the, now obsolete, lossless-JPEG format. The subset of 3568 mammography images that are included in the CBIS-DDSM have been selected and curated by a trained mammographer. The dataset is made up of 1872 calcification cases and 1696 mass cases, with a pathologic diagnosis for each image. We combine these cases and create a random train:test:validation split of 70:20:10.
 \subsection{Models}
 \label{Models}
 Convolutional Neural Networks got increasing attention in recent years, primarily for classification of image data. There exist many established pre-trained CNNs online that can be applied to the data. Based on the results of the BreastNet18 model of Montaha et al., VGG-16 and ResNet50 architecture are used as the base models in this report \cite{Montaha_2021}.

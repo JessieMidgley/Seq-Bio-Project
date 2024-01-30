@@ -248,7 +248,7 @@ To evaluate the best VGG16 and ResNet50 model we trained them on 5 different tra
 \def\etc{\end{tabular}}
 \begin{table}[h]
 \setlength\tabcolsep{4pt}
-\caption{Results of VGG-16 hyperparameter tuning}%
+\caption{Results of the VGG-16 model optimization}%
 \begin{tabular}{@{}lllllllll@{}}
 \toprule
   Prepro & \btc Last Layer\\Trainable \etc  & \btc Adam/ \\ Nadam \etc & \btc Flatten/\\GAP\footnotemark[1]\etc& \btc Learning\\ rate \etc & \btc Data\\ Augm.\footnotemark[2] \etc & \btc H/W \\ Ratio\footnotemark[3] \etc & Acc\footnotemark[4]  & AUC\footnotemark[5]  \\
@@ -291,7 +291,7 @@ Figure~\ref{VGG-16_best} shows the training and test accuracy and loss per epoch
 \def\etc{\end{tabular}}
 \begin{table}[h]
 \setlength\tabcolsep{4pt}
-\caption{Results of ResNet-50 hyperparameter tuning}%
+\caption{Results of the ResNet-50 model optimization}%
 \begin{tabular}{@{}lllllllll@{}}
 \toprule
   Prepro & \btc Last Layer\\Trainable \etc  & \btc Adam/ \\ Nadam \etc & \btc Flatten/\\GAP\footnotemark[1]\etc& \btc Learning\\ rate \etc & \btc Data\\ Augm. \etc & \btc H/W \\ Ratio\footnotemark[4] \etc & Acc\footnotemark[5]  & AUC\footnotemark[6]  \\
@@ -316,7 +316,7 @@ built-in   & no  & Adam & GAP & 0.0001 & no & no & 0.7515  &  0.8128 \\
 \footnotetext[5]{Accuracy on validation set}
 \footnotetext[6]{AUC on validation set}
 \end{table}
-Table~\ref{tab:resnet_results} shows...
+Table~\ref{tab:resnet_results} shows the accuracy and AUC of ResNet50 architectures instantiated with various custom classification layers, optimizers, and learning rates, and trained on differently preprocessed image sets. The combination that achieved the best result is highlighted in the table.
 \begin{figure}[ht]%
 \centering
 \includegraphics[width=1.0\textwidth]{ResNet50_GlobalAvg_results.pdf}
@@ -329,7 +329,7 @@ Table~\ref{tab:resnet_results} shows...
 \caption{ROC curves of the best model trained on different training/validation splits.}
 \label{fig:ROC_resnet}
 \end{figure}
-In Figure~\ref{fig:train_val_performance_resnet} and Figure~\ref{fig:ROC_resnet} we see ...
+Figure~\ref{fig:train_val_performance_resnet} shows the corresponding learning curves. To validate our final model, we trained five models on different training/validation splits and evaluated them on the test set. Figure~\ref{fig:ROC_resnet} shows the ROC curves for all five models. The mean accuracy of all five models was $79.6\%$ and the mean AUC was $71.9\%$.
 \section{Discussion}
 \label{Discussion}
 In the project, breast cancer images are preprocessed and data augmentation is applied to get more images for training. For data augmentation, the DataGenerator from tensorflow as well as a self-written augmentation are used.\\

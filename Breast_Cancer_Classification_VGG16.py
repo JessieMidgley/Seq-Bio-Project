@@ -24,7 +24,7 @@ import pandas as pd
 import image_preprocessing
 from tueplots import bundles
 import validation
-import dataaugmentation
+import data_augmentation
 
 
 def load_image_paths(image_dir='./venv/CBIS-DDSM/csv/dicom_info.csv'):
@@ -142,7 +142,7 @@ def train_test_validation_split(model, only_mass_cases=True, only_full_images=Tr
     X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.33, random_state=108)
     
     if aug:
-        X_train, y_train = dataaugmentation.dataaugmentation(X_train, y_train, maintain_aspect_ratio=maintain_aspect_ratio)
+        X_train, y_train = data_augmentation.dataaugmentation(X_train, y_train, maintain_aspect_ratio=maintain_aspect_ratio)
         if model == "VGG16":
             X_test = tf.keras.applications.vgg16.preprocess_input(X_test)
             X_val = tf.keras.applications.vgg16.preprocess_input(X_val)

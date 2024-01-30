@@ -119,7 +119,7 @@
 
 \author*[1]{\fnm{Julia} \sur{Graf}}\email{julia.graf@student.uni-tuebingen.de}
 \equalcont{These authors contributed equally to this work.}
-\author*[1]{\fnm{Jana} \sur{Hoffmann}}\email{jana.hoffmann2@student.uni-tuebingen.de}
+\author*[1]{\fnm{Jana} \sur{Hoffmann}}\email{jana2.hoffmann@student.uni-tuebingen.de}
 \equalcont{These authors contributed equally to this work.}
 
 \author*[1]{\fnm{Jessie} \sur{Midgley}}\email{jessie.midgley@student.uni-tuebingen.de}
@@ -133,7 +133,7 @@
 %% sample for unstructured abstract %%
 %%==================================%%
 
-\abstract{Breast cancer, a frequently diagnosed and often life-threatening disease, poses a significant threat, particularly among females. The danger associated with breast cancer underscores the need for advanced techniques to improve the diagnosis of patients suffering from breast cancer. Mammography is a widely used technique for screening breast cancer. In this report, mammographic screens from the CBIS-DDSM Breast Cancer Image Datataset are used to perform binary breast cancer classification into malignant and benign cases. Classification is performed based on a machine learning approach using two different Convolutional Neural Networks (CNNs): VGG-16 and ResNet-50. ResNet-50 outperforms VGG-16 with an accuracy of 79.6\% and and AUC of 71.9\%.}
+\abstract{Breast cancer, a frequently diagnosed and often life-threatening disease, poses a significant threat, particularly among females. The danger associated with breast cancer underscores the need for advanced techniques to improve the diagnosis of patients suffering from breast cancer. Mammography is a widely used technique for screening breast cancer. In this report, mammographic screens from the CBIS-DDSM Breast Cancer Image Dataset are used to perform binary breast cancer classification into malignant and benign cases. Classification is performed based on a machine learning approach using two different Convolutional Neural Networks (CNNs): VGG-16 and ResNet-50. ResNet-50 outperforms VGG-16 with an accuracy of 79.6\% and and AUC of 71.9\%.}
 %%================================%%
 %% Sample for structured abstract %%
 %%================================%%
@@ -159,7 +159,7 @@ Breast cancer is a significant global health concern, impacting the lives of mil
 \label{Materials}
 \subsection{Dataset}
 \label{Dataset}
-The CBIS-DDSM dataset is an updated version of the Digital Database for Screening Mammography (DDSM) \cite{Heath2007THEDD}, containing digitized mammograms that have been selected and curated by a trained mammographer. We use a subset of 3286 mammography images, containing 1590 calcification cases and 1696 mass cases, with a pathologic diagnosis for each image. We combine these cases and create a random train:test:validation split of 70:20:10.
+The CBIS-DDSM dataset is an updated version of the Digital Database for Screening Mammography (DDSM) \cite{Heath2007THEDD}, containing digitized mammograms that have been selected and curated by a trained mammographer. We use a subset of 3.286 mammograms, containing 1.590 calcification cases and 1.696 mass cases, with a pathologic diagnosis for each image. We combine these cases and create a random train:test:validation split of 70:20:10.
 \subsection{Models}
 \label{Models}
 \subsubsection{ResNet-50}
@@ -203,44 +203,34 @@ Since the mammograms do not have the dimensions required for the models, we resi
   \caption{Image preprocessing pipeline}
   \label{fig:image_preprocessing}
 \end{figure}
-\noindent To process the images, we implement a workflow that was proposed by Montaha et al.~\cite{Montaha2021}. Sometimes, undesired objects or thin white borders appear in the images as shown in Figure~\ref{fig:image_preprocessing}a. As these can impair the performance of the model, we remove them. Firstly, the white borders are removed by coloring a border of 5 pixels black. This way, the borders are removed without losing necessary information. In the next step, to eliminate noise from the pictures, we binarize them and apply morphological opening~\cite{morph}. To get rid of any remaining artefacts, we apply largest contour detection~\cite{contours}. Finally, the resulting binary mask is merged with the original image, as shown in Figure~\ref{fig:image_preprocessing}b. In mammograms, fatty tissues appear dark while both dense breast tissues and tumors have a light appearance~\cite{Montaha2021}. This means that tumors are difficult to detect in dense tissues. To enhance the contrast, we apply gamma correction and CLAHE, which was developed for medical imaging to improve the visibility of complex structures~\cite{Montaha2021} (Figure~\ref{fig:image_preprocessing}c). The final step in image preprocessing is applying the \verb|ImageJ| Green Fire Blue (GFB) filter on the image to separate the tumor, dense tissues and surrounding cells in three different colors (see Figure~\ref{fig:image_preprocessing}d).
+\noindent To process the images, we implement a workflow that was proposed by Montaha et al.~\cite{Montaha2021}. Sometimes, undesired objects or thin white borders appear in the images as shown in Figure~\ref{fig:image_preprocessing}a. As these can impair the performance of the model, we remove them. Firstly, the white borders are removed by coloring a border of 5 pixels black. This way, the borders are removed without losing necessary information. In the next step, to eliminate noise from the pictures, we binarize them and apply morphological opening~\cite{morph}. To get rid of any remaining artefacts, we apply largest contour detection~\cite{contours}. Finally, the resulting binary mask is merged with the original image, as shown in Figure~\ref{fig:image_preprocessing}b. In mammograms, fatty tissues appear dark while both dense breast tissues and tumors have a light appearance~\cite{Montaha2021}. This means that tumors are difficult to detect in dense tissues. To enhance the contrast, we apply gamma correction and \verb|CLAHE|, which was developed for medical imaging to improve the visibility of complex structures~\cite{Montaha2021} (Figure~\ref{fig:image_preprocessing}c). The final step in image preprocessing is applying the \verb|ImageJ| Green Fire Blue (GFB) filter on the image to separate the tumor, dense tissues and surrounding cells in three different colors (see Figure~\ref{fig:image_preprocessing}d).
 \subsubsection{Fine Tuning}
 \label{finetuning}
-We experiment with re-training the last layer of the pre-trained model with the new images. This means that the original weights from the first to the penultimate layer are preserved or ``frozen", and the last layer is replaced with new weights in order to learn task-specific features. In addition, a final fully-connected layer with 128 units was added to the ResNet-50 model in order to increase the capacity of the model.
+We experiment with re-training the last layer of the pre-trained model with the new images. This means that the original weights from the first to the penultimate layer are preserved or ``frozen", and the last layer is replaced with new weights in order to learn task-specific features. In addition, a final fully-connected layer with 128 units was added to the ResNet-50 model in order to increase the capacity.
 \subsubsection{Optimizer and Learning Rate}
 \label{learningrate}
 We compare the performance of two different optimizers, namely Adam and Nadam. Adam computes individual adaptive learning rates for different parameters from estimates of first and second moments of the gradients \cite{kingma2017adam}. Nadam is an extension of the Adam optimizer that incorporates Nesterov momentum and can lead to improved convergence \cite{dozat.2016}.
-The learning rate is a hyperparameter of the optimizer, determining the weight with which parameters are updated at each iteration during optimization \cite{Brownlee_2020}. Yuanyuan et al. even claim that the learning rate is the hyperparameter with the largest influence on the classification accuracy of a model \cite{Yuanyuan_2020}. We compare the two optimization algorithms at three different learning rates. With a larger learning rate, the model tends to converge faster, however with an increased risk of overshooting the optimal value of the loss function \cite{Brownlee_2020}. If the learning rate is too small, the training process might be time-consuming.
+The learning rate is a hyperparameter of the optimizer, determining the weight with which parameters are updated at each iteration during optimization \cite{Brownlee_2020}. We compare the two optimization algorithms at three different learning rates. With a larger learning rate, the model tends to converge faster, however with an increased risk of overshooting the optimal value of the loss function \cite{Brownlee_2020}. If the learning rate is too small, the training process might be time-consuming.
 \subsubsection{Flatten vs. Global Average Pooling}
 \label{fullyConnected}
-In order to pass the output of the last convolutional layer to the fully-connected layer and then further to the softmax layer, the vector needs to be converted into a one-dimensional vector. This can be done by applying a flatten layer where the resulting one-dimensional vector contains the same values as before the flattening.\\
-Another layer that we can add to reduce the dimensions is a Global Average Pooling layer. This layer creates one feature map for each class of the output and the average of each is passed to the softmax layer~\cite{Admin_2023}.
+In order to pass the output of the last convolutional layer to the fully-connected layer and then further to the output layer, the vector needs to be converted into a one-dimensional vector. This can be done by applying a Flatten layer where the resulting one-dimensional vector contains the same values as before the flattening. Another layer that we can add to reduce the dimensions is a Global Average Pooling layer. This layer creates one feature map for each class of the output and the average of each is passed to the last layer~\cite{Admin_2023}.
 \subsubsection{Image Data Generator}
 \label{ImageDataGenerator}
-For the training we only have 2300 images to train on after splitting the images of the dataset in train, validation and test sets. We compare the performance of our model on these original images in the train set to the images of the train set randomly modified by an ImageDataGenerator from tensorflow before each epoch~\cite{IDG}. We use the following parameters:\\
-\begin{itemize}
-\item rotation\_range=40
-\item width\_shift\_range=0.2
-\item height\_shift\_range=0.2
-\item shear\_range=0.2
-\item zoom\_range=0.2
-\item horizontal\_flip=True
-\item fill\_mode='nearest'
-\end{itemize}
-So the input images get randomly flipped by a range between 0° and 40°, shifted on their horizontal axis up to 20\% of their width, shifted on their vertical axis up to 20\% of their height, zoomed by a factor within a range of 0.8 and 1.2, flipped from left to right and the shear transformation is applied to them with an angel of 0.2°. The fill mode fills pixels outside as the nearest pixel. The model than sees more different images. The amount of images that gets seen in each epoch is the same as before.
+After splitting the dataset into train, validation, and test sets, we are left with 2.300 training images. We compare the performance of our model on these training images to the images of the train set randomly modified by tensorflow's \verb|ImageDataGenerator| before each epoch~\cite{IDG}. We set the parameters, so that the input images are randomly flipped by a range between 0° and 40°, shifted on their horizontal axis up to 20\% of their width, shifted on their vertical axis up to 20\% of their height, zoomed by a factor within a range of 0.8 and 1.2, flipped from left to right and the shear transformation is applied to them with an angle of 0.2°. The fill mode fills pixels outside as the nearest pixel. The number of images per epoch stays unchanged.
 \subsubsection{Data Augmentation}
 \label{DataAugmentation}
-We also test the performance on an augmentation method we wrote ourselves to increase the amount of images the model sees in each epoch. Therefor we implemented the augmentation techniques Montaha et. al. used in their work of the BrestNet18 model~\cite{Montaha2021}. Through the augmentation we generate from each input image of the train set 7 new ones, by flipping vertically, horizontally, vertically and horizontally and rotating the original and the horizontal flipped image by -30° and 30°. After the augmentation the train set includes 18.400 images.
+We also test the performance using an augmentation method that increases the amount of images the model sees in each epoch. We therefore implemented the augmentation techniques proposed by Montaha et al.~\cite{Montaha2021}. Through the augmentation we generate seven new images for every original image by flipping and rotating. After the augmentation the train set includes 18.400 images.
 \section{Results}
 \label{Results}
-\subsection{Validation on Best Model}
+\subsection{Evaluation strategy}
 \label{CV_Results}
-To evaluate the best VGG16 and ResNet50 model we trained them on 5 different train validation splits and use our pre-defined test set to evaluate the trained model. We generate the different splits by applying the train\_test\_split function from scikit-learn with five times and set the random\_state parameter to None~\cite{TTS}. This way for each run a different values is being used. In the end we plot the ROC-curve for each of these runs and compute the mean test accuracy and the mean test auc.
+To find the best performing models, we optimized for validation accuracy and AUC. Different combinations of various custom classification layers, optimizers, learning rates, and differently preprocessed image sets were explored.\\
+To evaluate the best models, we train on five different train/validation splits, created by applying the \verb|train_test_split| function from \verb|scikit-learn|~\cite{TTS}. In the end we plot the ROC-curve for each of the runs and compute the mean test accuracy and the mean test AUC.
 \subsection{VGG-16}
 \label{VGG-16_Results}
 \def\btc{\begin{tabular}{c}}
 \def\etc{\end{tabular}}
-\begin{table}[h]
+\begin{table}[ht]
 \setlength\tabcolsep{4pt}
 \caption{Results of the VGG-16 model optimization}%
 \begin{tabular}{@{}lllllllll@{}}
@@ -265,20 +255,25 @@ built-in   & no  & Adam & Flatten & 0.00001 & no & yes & 0.7117  & 0.7286  \\
 \footnotetext[5]{AUC on validation set}
 \label{tab:vgg_results}
 \end{table}
-Table~\ref{tab:vgg_results} displays the performance of the model with different hyperparameters. The performance is measured based on two values: the accuracy and the area under the curve (AUC). The training of the respective models is performed on a training dataset. Validation is performed on a separate set of images, not seen by the model before.\\
-Applying a Global Average Pooling layer instead of a Fatten layer gives rise to worse accuracy and AUC, so does the model, including the self-written preprocessing.\\
-The best model is written in bold in the table. The model uses a learning rate of 0.00001, the Adam optimizer, and a flatten layer. The model has a validation accuracy of 72.3\% and an AUC of 80.1\%.\\
 \begin{figure}[ht]%
 \centering
 \includegraphics[width=1.0\textwidth]{VGG16_BaseModel-Adam_results_0.00001.pdf}
-\caption{Training and validation accuracy and loss of model with best performance }\label{VGG-16_best}
+\caption{Learning curves of the best-performing VGG-16 model.}
+\label{VGG-16_best}
 \end{figure}
-\begin{figure}[ht]%
-\centering
-\includegraphics[width=0.6\textwidth]{final_roc.pdf}
-\caption{ROC curve after cross-validation of model with best performance using different training/validation splits.}\label{final-roc}
+\begin{figure}[ht]
+  \begin{subfigure}{0.5\textwidth}
+    \includegraphics[width=\linewidth]{final_roc.pdf}
+    \caption{VGG-16}
+  \end{subfigure}%
+  \begin{subfigure}{0.5\textwidth}
+    \includegraphics[width=\linewidth]{final_ROC_ResNet50.pdf}
+    \caption{ResNet-50}
+  \end{subfigure}
+  \caption{ROC curves of the best models trained on different training/validation splits.}
+  \label{fig:ROC_curves}
 \end{figure}
-Figure~\ref{VGG-16_best} shows the training and test accuracy and loss per epoch of the model. Training, as well as validation accuracy, increased whereas the loss decreased. Figure~\ref{final-roc} displays the ROC curves for the validation applied to a test set using different train/validation splits. All the models result in a similar AUC for the different splits. The model with best performance achieves a mean accuracy on all splits of 68.6\% and a mean AUC of 73.7\%.
+\noindent Table~\ref{tab:vgg_results} displays the performance measures of the VGG-16 optimization trials. The best model is highlighted in the table. It uses a learning rate of 0.00001, the Adam optimizer, and a Flatten layer, resulting in a validation accuracy of 72.3\% and an AUC of 80.1\%. Figure~\ref{VGG-16_best} shows that training and validation accuracy increase, whereas the loss decreases. The validation of the best model shows that each split results in a similar AUC as seen in Figure~\ref{fig:ROC_curves}a. The model with best performance achieves a mean accuracy of 68.6\% and a mean AUC of 73.7\% over all splits.
 \subsection{ResNet-50}
 \label{ResNet_Results}
 \def\btc{\begin{tabular}{c}}
@@ -310,36 +305,25 @@ built-in   & no  & Adam & GAP & 0.0001 & no & no & 0.7515  &  0.8128 \\
 \footnotetext[5]{Accuracy on validation set}
 \footnotetext[6]{AUC on validation set}
 \end{table}
-Table~\ref{tab:resnet_results} shows the accuracy and AUC of ResNet50 architectures instantiated with various custom classification layers, optimizers, and learning rates, and trained on differently preprocessed image sets. The combination that achieved the best result is highlighted in the table.
+Table~\ref{tab:resnet_results} shows the performance measures of the ResNet-50 optimization trials. The combination that achieved the best result is highlighted in the table. It uses a learning rate of 0.0001, the Nadam optimizer, and a Global Average Pooling layer, resulting in a validation accuracy of 75.2\% and an AUC of 82.7\%.
 \begin{figure}[ht]%
 \centering
 \includegraphics[width=1.0\textwidth]{ResNet50_GlobalAvg_results.pdf}
-\caption{Training and validation accuracy and loss of the model with the best performance.}
+\caption{Learning curves of the best-performing ResNet-50 model.}
 \label{fig:train_val_performance_resnet}
 \end{figure}
-\begin{figure}[ht]%
-\centering
-\includegraphics[width=0.6\textwidth]{final_ROC_ResNet50.pdf}
-\caption{ROC curves of the best model trained on different training/validation splits.}
-\label{fig:ROC_resnet}
-\end{figure}
-Figure~\ref{fig:train_val_performance_resnet} shows the corresponding learning curves. To validate our final model, we trained five models on different training/validation splits and evaluated them on the test set. Figure~\ref{fig:ROC_resnet} shows the ROC curves for all five models. The mean accuracy of all five models was $79.6\%$ and the mean AUC was $71.9\%$.
+Figure~\ref{fig:train_val_performance_resnet} shows the corresponding learning curves. Figure~\ref{fig:ROC_curves}b shows the ROC curves for all five models. The mean accuracy of all five models was $79.6\%$ and the mean AUC was $71.9\%$.
+\newpage
 \section{Discussion}
 \label{Discussion}
-In the project, breast cancer images are preprocessed and data augmentation is applied to get more images for training. For data augmentation, the DataGenerator from tensorflow as well as a self-written augmentation are used.\\
-The data, is split into training, validation, and test sets. The two models, VGG-16 and ResNet50 are then trained on the training set, achieving accuracy and AUC of over 90\% in both models. The best accuracy and AUC of both architectures use built-in preprocessing  and no data augmentation. The ResNet50 model with a Nadam optimizer, a global average pooling layer, and a learning rate of 0.0001 achieves the best accuracy and AUC among both models.
-The results show that CNNs can support clinicians in classifying mammographic images. However, further improvements are necessary for better predictions. As we are dealing with patients and health data correct and trustful classification is really important.
+Despite using a workflow similar to that proposed by Montaha et al., we were not able to achieve their accuracy of 98.02\% for the VGG-16 model. We assume their high accuracy resulted from them augmenting the data before splitting it. This way, it is possible that the model is tested on images of which it may have already seen augmented versions during training. The authors also explored the ResNet-50 architecture but achieved worse results. For us, the ResNet-50 model outperformed the VGG-16 model. We hypothesize that this is due to its deeper architecture and the incorporation of residual connections, which address the vanishing gradient problem. Additionally, since training is a stochastic process and we only performed one training round for each optimization variable, it is possible that the actual optimum is not represented in the metrics we chose to define the best model. Retrospectively, we think it would boost performance to combine data augmentation with more trainable parameters.
 \section{Conclusion}
 \label{conclusion}
-In the following report, two existing CNN architectures, namely VGG-16 and ResNet-50 are used to classify mammogram images into benign and malignant.\\
-Additionally, data augmentation, data preprocessing, and hyperparameter tuning are presented as important steps to tune the model and achieve more reliable predictions.
-Performance analysis of the models indicates the possibilities and benefits of artificial neural networks in health-related issues. \\
-For both models an accuracy and AUC of over 65\% is achieved.
-Although, the values indicate a moderate performance it is important to consider the limitations for further improvements.
+Two existing CNN architectures, namely VGG-16 and ResNet-50 are used to classify mammograms into benign and malignant. Additionally, data augmentation, data preprocessing, and hyperparameter tuning are presented as important steps to improve predictions and achieve generalized models.
+Performance analysis of the models indicates the possibilities and benefits of artificial neural networks in medical image classification. For both models, an AUC of over 70\% is achieved. Although, the values indicate a moderate performance it is important to consider the limitations for further improvements.
 \subsection{Limitations}
 \label{limitation}
-The CBIS-DDSM dataset, used for classification, consists of 1644 images. For a model to perform good classification the size of the available training data plays an important role. As the data is taken from a publicly available source, there is a limited amount of data available. \\
-Additionally, the performed classification treats ``benign-without-callback"  and ``benign" identically. However, to ensure correct classification one might have to consider further information for the classification of these images.\\
-Finally, hyperparameter tuning was restricted due to time and memory issues. As the servers were not accessible during the time of model training, all the hyperparameter tuning was run locally leading to long runtimes and memory-related issues.
+The CBIS-DDSM dataset, used for classification, consists of 3.286 images. For a model to perform good classification the size of the available training data plays an important role. As the data is taken from a publicly available source, there is a limited amount of data available. Finally, hyperparameter tuning was restricted due to time and memory issues. As the servers were not accessible during the time of model training, all the hyperparameter tuning was run locally leading to long runtimes and memory-related issues.
+\newpage
 \bibliography{sn-bibliography}
 \end{document}

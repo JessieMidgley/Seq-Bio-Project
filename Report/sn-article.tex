@@ -26,15 +26,15 @@
 %%\documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
 
 
-%%Note: the following reference styles support Namedate and Numbered referencing. By default the style follows the most common style. To switch between the options you can add or remove Numbered in the optional parenthesis. 
-%%The option is available for: sn-basic.bst, sn-vancouver.bst, sn-chicago.bst, sn-mathphys.bst. %  
- 
+%%Note: the following reference styles support Namedate and Numbered referencing. By default the style follows the most common style. To switch between the options you can add or remove Numbered in the optional parenthesis.
+%%The option is available for: sn-basic.bst, sn-vancouver.bst, sn-chicago.bst, sn-mathphys.bst. %
+
 %%\documentclass[sn-nature]{sn-jnl}% Style for submissions to Nature Portfolio journals
 %%\documentclass[sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
 \documentclass[sn-mathphys,Numbered]{sn-jnl}% Math and Physical Sciences Reference Style
 %%\documentclass[sn-aps]{sn-jnl}% American Physical Society (APS) Reference Style
 %%\documentclass[sn-vancouver,Numbered]{sn-jnl}% Vancouver Reference Style
-%%\documentclass[sn-apa]{sn-jnl}% APA Reference Style 
+%%\documentclass[sn-apa]{sn-jnl}% APA Reference Style
 %%\documentclass[sn-chicago]{sn-jnl}% Chicago-based Humanities Reference Style
 %%\documentclass[default]{sn-jnl}% Default
 %%\documentclass[default,iicol]{sn-jnl}% Default with double column layout
@@ -203,7 +203,7 @@ This is followed by a dense layer flattening the output of the previous layers a
   \caption{Image preprocessing pipeline}
   \label{fig:image_preprocessing}
 \end{figure}
-The main steps in image pre-processing are shown in Figure~\ref{fig:image_preprocessing}.
+\noindent As both the ResNet50 and VGG16 architectures require images in the 224px $\times$ 224px format~\cite{resnet_docu, vgg_docu}, the images must first be resized. Sometimes, undesired objects or thin white borders appear in the images as shown in Figure~\ref{fig:image_preprocessing}a. As these can impair the performance of the model, we remove them. Firstly, the white borders are removed by setting the colour of all pixels within 5px of the border to black. This way, the borders are removed without losing necessary information. The next step is to eliminate noise from the pictures. To do so, we binarize the image and apply morphological opening~\cite{morph}. After this step, some images still contain large artefacts that the morphological opening could not remove. To get rid of the remaining artefacts, we apply largest contour detection~\cite{contours}. Finally, the resulting binary mask is merged with the original image. The result is shown in Figure~\ref{fig:image_preprocessing}b. In mammography images, fatty tissues appear dark while both dense breast tissues and tumors have a light appearance~\cite{Montaha2021}. So, even a small tumor can easily be detected in fatty tissues but in dense breast tissues, even large tumors are difficult to detect. To enhance the contrast, we apply gamma correction and CLAHE. CLAHE was developed for medical imaging to improve the quality of complex structures~\cite{Montaha2021}. The image enhancement improves the visibility of the tumour as shown in Figure~\ref{fig:image_preprocessing}c. The final step in image preprocessing is applying the ImageJ Green Fire Blue (GFB) filter on the image to separate the tumour, dense tissues and surrounding cells in three different colours (see Figure~\ref{fig:image_preprocessing}d). Montaha et. al experimented with different ImageJ filters and found that the GFB filter works best for the CBIS-DSSM dataset~\cite{Montaha2021}.
 
 \subsubsection{Fine Tuning}\label{finetuning}
 We experiment with re-training the last layer of the pre-trained model with the new images. This means that the original weights from the first to the penultimate layer are preserved or ``frozen", and the last layer is replaced with new weights in order to learn task-specific features. In addition, a final fully-connected layer with 128 units was added to the ResNet-50 model in order to increase the capacity of the model.
@@ -211,7 +211,7 @@ We experiment with re-training the last layer of the pre-trained model with the 
 \subsubsection{Optimizer and Learning Rate}\label{learningrate}
 We compare the performance of two different optimizers, namely Adam and Nadam. Adam computes individual adaptive learning rates for different parameters from estimates of first and second moments of the gradients \cite{kingma2017adam}. Nadam is an extension of the Adam optimizer that incorporates Nesterov momentum and can lead to improved convergence \cite{dozat.2016}.
 The learning rate is a hyperparameter of the optimizer, determining the weight with which parameters are updated at each iteration during optimization \cite{Brownlee_2020}.
-Yuanyuan et al. even claim that the learning rate is the hyperparameter with the largest influence on the classification accuracy of a model \cite{Yuanyuan_2020}. 
+Yuanyuan et al. even claim that the learning rate is the hyperparameter with the largest influence on the classification accuracy of a model \cite{Yuanyuan_2020}.
 We compare the two optimization algorithms at three different learning rates.
 With a larger learning rate, the model tends to converge faster, however with an increased risk of overshooting the optimal value of the loss function \cite{Brownlee_2020}.
 If the learning rate is too small, the training process might be time-consuming.
@@ -335,18 +335,18 @@ built-in   & no  & Adam & GAP & 0.0001 & no & no & 0.7515  &  0.8128 \\
 \section{Discussion}\label{Discussion}
 In the project, breast cancer images are preprocessed and data augmentation is applied to get more images for training. For data augmentation, the DataGenerator from tensorflow as well as a self-written augmentation are used.\\
 The data, is split into training, validation, and test sets. The two models, VGG-16 and ResNet50 are then trained on the training set, achieving accuracy and AUC of over 90\% in both models. The best accuracy and AUC of both architectures use built-in preprocessing  and no data augmentation. The ResNet50 model with a Nadam optimizer, a global average pooling layer, and a learning rate of 0.0001 achieves the best accuracy and AUC among both models.
-The results show that CNNs can support clinicians in classifying mammographic images. However, further improvements are necessary for better predictions. As we are dealing with patients and health data correct and trustful classification is really important. 
+The results show that CNNs can support clinicians in classifying mammographic images. However, further improvements are necessary for better predictions. As we are dealing with patients and health data correct and trustful classification is really important.
 
 \section{Conclusion}\label{conclusion}
 In the following report, two existing CNN architectures, namely VGG-16 and ResNet-50 are used to classify mammogram images into benign and malignant.\\
 Additionally, data augmentation, data preprocessing, and hyperparameter tuning are presented as important steps to tune the model and achieve more reliable predictions.
 Performance analysis of the models indicates the possibilities and benefits of artificial neural networks in health-related issues. \\
 For both models an accuracy and AUC of over 65\% is achieved.
-Although, the values indicate a moderate performance it is important to consider the limitations for further improvements. 
+Although, the values indicate a moderate performance it is important to consider the limitations for further improvements.
 \subsection{Limitations}\label{limitation}
 The CBIS-DDSM dataset, used for classification, consists of 1644 images. For a model to perform good classification the size of the available training data plays an important role. As the data is taken from a publicly available source, there is a limited amount of data available. \\
 Additionally, the performed classification treats ``benign-without-callback"  and ``benign" identically. However, to ensure correct classification one might have to consider further information for the classification of these images.\\
-Finally, hyperparameter tuning was restricted due to time and memory issues. As the servers were not accessible during the time of model training, all the hyperparameter tuning was run locally leading to long runtimes and memory-related issues. 
+Finally, hyperparameter tuning was restricted due to time and memory issues. As the servers were not accessible during the time of model training, all the hyperparameter tuning was run locally leading to long runtimes and memory-related issues.
 
 
 
